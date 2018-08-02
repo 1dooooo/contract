@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <h1 align = "center">期货合约</h1>
+        <div align = "center">
+            <table id="twidth" border="1" cellspacing = "0">
+                
+                {% for contract in contracts %}
+                    {% if contracts[contract] %}
+                        <tr>
+                            <td width="30%" bgcolor = "#f0f8ff"><b>{{contract}}</b></td>
+                            <td>{{contracts[contract]}}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        </div>
+        <script>
+            if (navigator.userAgent.indexOf('Windows NT') != -1) {
+                document.getElementById("twidth").width = "50%";
+            }
+        </script>
+</body>
+</html>
