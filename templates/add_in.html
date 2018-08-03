@@ -15,6 +15,17 @@
 				}
 			}
 		</script>
+		<style>
+		.btn{
+		            width:140px;
+		            height:36px;
+		            line-height:18px;
+		            font-size:18px;
+			    background:url("/static/images/bg.gif");
+			    color:#124852;
+			    padding-bottom:4px
+			    } 
+		</style>
 		<link title="style1" rel="stylesheet" href="/static/css/style.css" type="text/css" />
 		<link title="style2" rel="alternate stylesheet" href="/static/css/style2.css" type="text/css" />
 		<link title="style3" rel="alternate stylesheet" href="/static/css/style3.css" type="text/css" />
@@ -22,10 +33,15 @@
 
 	<body>
 		<div class="style_changer" style="margin-left:50px;">
-			<div class="style_changer_text">Themes:</div>
-			<input type="submit" value="1" onclick="setActiveStyleSheet('style1');" />
-			<input type="submit" value="2" onclick="setActiveStyleSheet('style2');" />
-			<input type="submit" value="3" onclick="setActiveStyleSheet('style3');" />
+				<div class="style_changer_text" style="float: left;">Themes:
+				<input type="submit" value="1" onclick="setActiveStyleSheet('style1');" />
+				<input type="submit" value="2" onclick="setActiveStyleSheet('style2');" />
+				<input type="submit" value="3" onclick="setActiveStyleSheet('style3');" />
+				</div>
+				<div class="style_changer_text" style="margin-left: 20%;">内外盘选择:
+				<input class="btn" type="submit" value="内盘" onmouseover="this.style.backgroundColor='grey';" onmouseout="this.style.backgroundColor='';" />
+				<input class="btn" type="submit" value="外盘" onmouseover="this.style.backgroundColor='grey';" onmouseout="this.style.backgroundColor='';" onclick="javascript:window.location.href='/add_out'" />
+			</div>
 		</div>
 
 		<div class="form_content">

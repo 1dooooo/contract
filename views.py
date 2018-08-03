@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import collections
 import json
 import csv
+import os
 
 app = Flask(__name__)
 
@@ -12,13 +13,16 @@ from db_about import DBSession
 def upload():
     if request.method == 'POST':
         for file in request.files:
-            if file.rsplit('.', 1)[1] == 'csv':
-                f.save(f.filename)
-                with open(f.filename, 'r', encoding = 'utf-8'):
-                    data = csv.Dialect(f)
+            f = request.files[file]
+            post_fix = f.filename.rsplit('.', 1)[1]
+            if post_fix == 'csv':
+                f.save('/tmp/' + f.filename)
+                with open('/tmp/' + f.filename, 'r', encoding = 'utf-8') as file:
+                    data = csv.DictReader(file)
                     data = [dict(d) for d in data]
+                os.remove('/tmp/'+f.filename)
 
-            if file.rsplit('.', 1)[1] == 'json':
+            if post_fix == 'json':
                 data = json.load(f)
             if data[0].get('id', None) != None:
                 FC = OutFutureContract
