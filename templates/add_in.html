@@ -3,8 +3,8 @@
 
 	<head>
 		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<script type="text/javascript">
-			<!--
 			function setActiveStyleSheet(title) {
 				var i, a;
 				for(i = 0;(a = document.getElementsByTagName("link")[i]); i++) {
@@ -34,29 +34,37 @@
 	<body>
 		<div class="style_changer" style="margin-left:50px;">
 				<div class="style_changer_text" style="float: left;">Themes:
-				<input type="submit" value="1" onclick="setActiveStyleSheet('style1');" />
-				<input type="submit" value="2" onclick="setActiveStyleSheet('style2');" />
-				<input type="submit" value="3" onclick="setActiveStyleSheet('style3');" />
+				<input type="submit" value="1" onclick="setActiveStyleSheet('style1');" style="width:60px;height:25px;border:none;background:url(static/images/bg.gif) left top;"/>
+				<input type="submit" value="2" onclick="setActiveStyleSheet('style2');" style="width:60px;height:25px;border:none;background:url(static/images/center_bg2.gif) left top;"/>
+				<input type="submit" value="3" onclick="setActiveStyleSheet('style3');" style="width:60px;height:25px;border:none;background:url(static/images/center_bg3.gif) left top;" />
 				</div>
-				<div class="style_changer_text" style="margin-left: 20%;">内外盘选择:
-				<input class="btn" type="submit" value="内盘" onmouseover="this.style.backgroundColor='grey';" onmouseout="this.style.backgroundColor='';" />
-				<input class="btn" type="submit" value="外盘" onmouseover="this.style.backgroundColor='grey';" onmouseout="this.style.backgroundColor='';" onclick="javascript:window.location.href='/add_out'" />
-			</div>
+				
 		</div>
 
 		<div class="form_content">
-			<form id="in" action="/add_in" method="post">
+			<script>
+				function checkInput(){
+					if (document.getElementById('exchange').value == ''
+					|| document.getElementById('product').value == '') {
+						alert('交易所 和 品种 为必填项');
+						return false;
+					}
+					return true;
+				}
+			</script>
+			<form id="in" action="/add_in" method="post" onsubmit="return checkInput()">
 				<fieldset>
 					<legend>基本信息</legend>
 					<div class="form-row">
 						<div class="field-label"><label for="exchange">交易所</label>:</div>
-						<div class="field-widget"><input name="exchange" id="exchange" class="required" title="请输入 交易所" /></div>
+						<div class="field-widget"><input name="exchange" id="exchange" class="required" title="请输入 交易所">(必填)</input></div>
 					</div>
 					
 					<div class="form-row">
 						<div class="field-label"><label for="product">品种</label>:</div>
-						<div class="field-widget"><input name="product" id="product" class="required" title="请输入 品种" /></div>
+						<div class="field-widget"><input name="product" id="product" class="required" title="请输入 品种">(必填)</input></div>
 					</div>
+
 					
 					<div class="form-row">
 						<div class="field-label"><label for="code">代码</label>:</div>

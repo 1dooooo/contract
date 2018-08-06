@@ -9,7 +9,7 @@
 			<meta http-equiv="X-UA-Compatible" content="ie=edge">
 			<title>文件上传</title>
 			<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
-			<script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+			<script src="/static/js/jquery-3.1.1.min.js"></script>
 			<style>
 				body,
 				html {
@@ -88,7 +88,17 @@
 						</div>
 						<!-- 点击按钮上传文件 -->
 						<div class="col-md-5 up-content btnFile">
-							<form action="" enctype="multipart/form-data" method="post">
+						        <script>
+						                function checkFile(){
+                                                                    if (input.files.length == 0) {
+                                                                        alert("choose a file first");
+                                                                        return false;
+                                                                    }
+                                                                    return true; 
+                                                                }
+						        </script>
+							<form action="" enctype="multipart/form-data" method="post" onsubmit="return checkFile()">
+							
 								<div class="btn">
 									<button type="button" class="btn btn-success" id="btn"> 本地上传文件</button>
 									<input type="file" style="display:none;" id="fileInput" name="fileselect" multiple>
@@ -99,7 +109,7 @@
 										</ul>
 									</div>
 								</div>
-								<button id="b02" class="btn btn-success" style="width: 200px; margin-bottom: 10px;">上传</button>
+								<button id="b02" class="btn btn-success" style="width: 200px; margin-bottom: 10px;" >上传</button>
 							</form>
 						</div>
 					</div>
@@ -133,12 +143,21 @@
 				}, false);
 
 				function uploadDrag() {
+				        if(files == 0){
+				                alert('choose a file first');
+				                return;
+				        }
 					xhr = new XMLHttpRequest();
 					xhr.open("post", "/upload", false);
 					xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 					var fd = new FormData();
 					fd.append('mypic', files[0]);
 					xhr.send(fd);
+					childs = document.querySelector('.list-drag').children;
+					for (child of childs){
+						document.querySelector('.list-drag').removeChild(child);
+					}
+					alert("success !");					
 				}
 
 				function appendFile(files, listName) {
