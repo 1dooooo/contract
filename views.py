@@ -6,7 +6,7 @@ import os
 
 app = Flask(__name__)
 
-from FutureContract import InFutureContract, OutFutureContract
+from FutureContract import FutureContract
 from db_about import DBSession
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -30,13 +30,9 @@ def upload():
 
             if post_fix == 'json':
                 data = json.load(f)
-            if data[0].get('id', None) != None:
-                FC = OutFutureContract
-            else:
-                FC = InFutureContract
             session = DBSession()
             for d in data:
-                fc = FC(**d)
+                fc = FutureContract(**d)
                 session.add(fc)
             session.commit()
 
@@ -48,20 +44,11 @@ def show(variety = None):
     if request.args:
         variety = request.args['variety']
         location = request.args['location']
-        in_column = [qo.exchange for qo in DBSession().query(InFutureContract, InFutureContract.exchange).distinct()]
-        if location in in_column:
-            contracts = DBSession().query(InFutureContract).filter(InFutureContract.product == variety, InFutureContract.exchange == location).first().to_dict()
-        else:
-            contracts = DBSession().query(OutFutureContract).filter(OutFutureContract.product == request.args['variety']).first().to_dict()
+        contracts = DBSession().query(FutureContract).filter(FutureContract.product == variety, FutureContract.exchange == location).first().to_dict()
         return render_template('contract.html', contracts = contracts)
 
-
-    # return render_template('contract.html', contracts = DBSession().query(InFutureContract).first().to_dict())
     context = collections.defaultdict(list)
-    fcs = DBSession().query(InFutureContract, InFutureContract.exchange, InFutureContract.product)
-    for fc in fcs:
-        context[fc.exchange].append(fc.product)
-    fcs = DBSession().query(OutFutureContract, OutFutureContract.exchange, OutFutureContract.product)
+    fcs = DBSession().query(FutureContract, FutureContract.exchange, FutureContract.product)
     for fc in fcs:
         if fc.exchange.startswith('美国洲际交易所'):
             context['美国洲际交易所'].append(fc.product)
@@ -70,25 +57,19 @@ def show(variety = None):
             context['芝加哥商业交易所'].append(fc.product)
             continue
         context[fc.exchange].append(fc.product)
+    sorted(context)
+    print(context)
     return render_template('tabbar.html', context = context)
 
 
 @app.route('/add_in', methods=['POST', 'GET'])
 def add_in():
     if request.method == 'POST':
-        ifc = InFutureContract(**{key: request.form[key] for key in request.form})
+        fc = FutureContract(**{key: request.form[key] for key in request.form})
         session = DBSession()
-        session.add(ifc)
+        session.add(fc)
         session.commit()
 
     return render_template('add_in.html')
-@app.route('/add_out', methods=['POST', 'GET'])
-def add_out():
-    if request.method == 'POST':
-        ifc = OutFutureContract(**{key: request.form[key] for key in request.form})
-        session = DBSession()
-        session.add(ifc)
-        session.commit()
-    return render_template('add_out.html')
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
