@@ -7,6 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<script type="text/javascript" src="static/js/jquery-3.1.1.min.js" ></script>
 
 	<!--标准mui.css-->
 	<link rel="stylesheet" href="/static/css/mui.min.css">
@@ -32,14 +33,35 @@
 			background-color: #fff;
 		}
 	</style>
+	<script>
+		 function search() {
+            $.ajax({
+
+                type: "POST",
+                url: "/search" ,
+                data: $('#search').serialize(),
+                success: function (result,data) {
+                    console.log(result);
+                    if (result.resultCode == 200) {
+                        alert("SUCCESS:"+data);//add
+                    }
+                    ;
+                },
+                error : function() {
+                    alert("ERROR");
+                }
+            });
+        }
+
+	</script>
 </head>
 
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<div style="margin-left: 70%">
-			<form action="">
+			<form id="search" onsubmit="return false;" >
 				<input type="text" name="keyword" style="width: 70%">
-				<button style="width: 20%">Search</button>
+				<button style="width: 20%" onclick="search()">Search</button>
 			</form>
 		</div>
 	</header>
