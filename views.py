@@ -77,5 +77,6 @@ def search():
     fcs = [{'product':fc[0], 'exchange':fc[1]} for fc in DBSession().query(FutureContract.product, FutureContract.exchange).filter(FutureContract.product == keyword).all()]
     return json.dumps(fcs)
 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
