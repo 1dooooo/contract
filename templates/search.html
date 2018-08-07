@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Search</title>
+</head>
+<body>
+    <form action="" method="GET">
+        <input type="text" name="keyword">
+        <button>Search</button>
+    </form>
+    {% for fc in fcs %}
+    <li><a href="/show?variety={{fc.product}}&location={{fc.exchange}}">{{fc.product}} {{fc.exchange}}</a></li>
+    {% endfor %}
+</body>
+</html>
