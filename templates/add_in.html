@@ -4,6 +4,7 @@
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<script type="text/javascript" src="static/js/jquery-3.1.1.min.js" ></script>
 		<script type="text/javascript">
 			function setActiveStyleSheet(title) {
 				var i, a;
@@ -14,6 +15,23 @@
 					}
 				}
 			}
+			function addInItem(){
+				$.ajax({
+					type: "POST",
+					url:" /add_in",
+					data: $('#addIn').serialize(),
+					success: function(result){
+						alert("SUCCESS");
+						if(result.resultCode == 200){
+							alert("SUCCESS");
+						};
+					},
+					error: function(){
+						alert("ERROR!");
+					}
+				});
+			}
+		
 		</script>
 		<style>
 		.btn{
@@ -52,7 +70,7 @@
 					return true;
 				}
 			</script>
-			<form id="in" action="/add_in" method="post" onsubmit="return checkInput()">
+			<form id="addIn" onsubmit="return checkInput()">
 				<fieldset>
 					<legend>基本信息</legend>
 					<div class="form-row">
@@ -164,8 +182,8 @@
 					</div>
 					
 					<div class="form-row">
-						<div class="field-label"><label for="postion_limit">一般月份单边限仓</label>:</div>
-						<div class="field-widget"><input name="postion_limit" id="postion_limit" class="required" title="请输入 一般月份单边限仓" /></div>
+						<div class="field-label"><label for="position_limit">一般月份单边限仓</label>:</div>
+						<div class="field-widget"><input name="position_limit" id="position_limit" class="required" title="请输入 一般月份单边限仓" /></div>
 					</div>
 					
 					<div class="form-row">
@@ -204,7 +222,7 @@
 					</div>
 				</fieldset> 
 
-				<input type="submit" class="submit" value="Submit" />
+				<input type="button" class="button" value="Submit" onclick="addInItem()" />
 				<input class="reset" type="button" value="Reset" onclick="reset(); return false" />
 			</form>
 		</div>

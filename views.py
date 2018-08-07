@@ -57,7 +57,6 @@ def show(variety = None):
             context['芝加哥商业交易所'].append(fc.product)
             continue
         context[fc.exchange].append(fc.product)
-    print(context)
     return render_template('tabbar.html', context = context)
 
 

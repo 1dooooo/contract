@@ -8,15 +8,16 @@
 		<link rel="stylesheet" href="static/css/left.css">
 	</head>
 	
-	<body onload="changePage('/show')">
+	<body>
 
 		<div class="meny">
 			<h2>CONTRACT</h2>
 			<ul>
-				<li style="margin: 5% auto;"><a onclick="changePage('/show')" >演示主页</a></li>
-				<li style="margin: 5% auto;"><a onclick="changePage('/upload')">数据文件上传</a></li>
-				<li style="margin: 5% auto;"><a onclick="changePage('/add_in')">内盘数据上传</a></li>
-				<li style="margin: 5% auto;"><a onclick="changePage('/add_out')">外盘数据上传</a></li>
+				<li style="margin: 5% auto;"><a onclick="changePage('show')" >演示主页</a></li>
+				<li style="margin: 5% auto;"><a onclick="changePage('upload')">数据文件上传</a></li>
+				<li style="margin: 5% auto;"><a onclick="changePage('add_in')">内盘数据上传</a></li>
+				<li style="margin: 5% auto;"><a onclick="changePage('add_in')">内盘数据上传</a></li>
+
 			</ul>
 		</div>
 
@@ -29,12 +30,16 @@
 
 		<script src="static/js/meny.min.js"></script>
 		<script>
+ 			var meny;
 			function changePage(url){
-				$("#contents").load(url); 
+				var root = location.href.split('?')[0];
+				url =root+"?u="+root+url;
+				location.href=url; 
+
 			};
 			
 			// Create an instance of Meny
-			var meny = Meny.create({
+			meny = Meny.create({
 				// The element that will be animated in from off screen
 				menuElement: document.querySelector( '.meny' ),
 
@@ -42,7 +47,7 @@
 				contentsElement: document.querySelector( '.contents' ),
 
 				// [optional] The alignment of the menu (top/right/bottom/left)
-				position: Meny.getQuery().p || 'left',
+				position: Meny.getQuery().p || 'right',
 
 				// [optional] The height of the menu (when using top/bottom position)
 				height: 200,
@@ -57,7 +62,7 @@
 			// API Methods:
 			// meny.open();
 			// meny.close();
-			// meny.isOpen();
+			//meny.isOpen();
 			
 			// Events:
 			// meny.addEventListener( 'open', function(){ console.log( 'open' ); } );
@@ -68,6 +73,8 @@
 				var contents = document.querySelector( '.contents' );
 				contents.style.padding = '0px';
 				contents.innerHTML = '<div class="cover"></div><iframe src="'+ Meny.getQuery().u +'" style="width: 100%; height: 100%; border: 0; position: absolute;"></iframe>';
+			} else {
+				changePage('show');
 			}
 		</script>
 
