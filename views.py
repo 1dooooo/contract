@@ -10,8 +10,7 @@ from FutureContract import FutureContract
 from db_about import DBSession
 
 @app.route('/', methods = ['GET', 'POST'])
-@app.route('/admin', methods = ['GET', 'POST'])
-def admin():
+def index():
     return render_template('index.html')
 
 
@@ -76,6 +75,27 @@ def search():
     keyword = request.form['keyword']
     fcs = [{'product':fc[0], 'exchange':fc[1]} for fc in DBSession().query(FutureContract.product, FutureContract.exchange).filter(FutureContract.product.like("%"+keyword+"%")).all()]
     return json.dumps(fcs)
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    if request.args:
+        variety = request.args['variety']
+        location = request.args['location']
+        contracts = DBSession().query(FutureContract).filter(FutureContract.product == variety, FutureContract.exchange == location).first().to_dict()
+        return render_template('contract.html', contracts = contracts)
+
+    context = collections.defaultdict(list)
+    fcs = DBSession().query(FutureContract, FutureContract.exchange, FutureContract.product)
+    for fc in fcs:
+        if fc.exchange.startswith('美国洲际交易所'):
+            context['美国洲际交易所'].append(fc.product)
+            continue
+        if fc.exchange.startswith('芝加哥商业交易所'):
+            context['芝加哥商业交易所'].append(fc.product)
+            continue
+        context[fc.exchange].append(fc.product)
+    return render_template('admin.html',context=context)
+
 
 @app.route('/delete', methods=['POST'])
 def delete():
