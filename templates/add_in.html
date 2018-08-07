@@ -20,11 +20,8 @@
 					type: "POST",
 					url:" /add_in",
 					data: $('#addIn').serialize(),
-					success: function(result){
-						alert("SUCCESS");
-						if(result.resultCode == 200){
-							alert("SUCCESS");
-						};
+					success: function(){
+						alert("SUCCESS!")
 					},
 					error: function(){
 						alert("ERROR!");

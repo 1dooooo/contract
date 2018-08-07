@@ -34,18 +34,15 @@
 		}
 	</style>
 	<script>
-		 function search() {
+		var rep_data;
+		function search() {
             $.ajax({
 
                 type: "POST",
                 url: "/search" ,
                 data: $('#search').serialize(),
-                success: function (result,data) {
-                    console.log(result);
-                    if (result.resultCode == 200) {
-                        alert("SUCCESS:"+data);//add
-                    }
-                    ;
+                success: function(data) {
+					rep_data = data;
                 },
                 error : function() {
                     alert("ERROR");
