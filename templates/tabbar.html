@@ -2,6 +2,7 @@
 <html>
 
 <head>
+<<<<<<< HEAD
     <meta charset="utf-8">
     <title>Hello MUI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
@@ -98,11 +99,48 @@
         contents.querySelector('.mui-control-content').classList.add('mui-active');
 
         function search() {
+=======
+	<meta charset="utf-8">
+	<title>Hello MUI</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<script type="text/javascript" src="static/js/jquery-3.1.1.min.js" ></script>
+
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="/static/css/mui.min.css">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+	<style>
+		.mui-row.mui-fullscreen>[class*="mui-col-"] {
+			height: 100%;
+		}
+
+		.mui-col-xs-3,
+		.mui-control-content {
+			overflow-y: auto;
+			height: 100%;
+		}
+
+		.mui-segmented-control .mui-control-item {
+			line-height: 50px;
+			width: 100%;
+		}
+
+		.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+			background-color: #fff;
+		}
+	</style>
+	<script>
+		var rep_data;
+		function search() {
+>>>>>>> a44fba48701eabfe28a69417770dd6e58b8e2381
             $.ajax({
 
                 type: "POST",
                 url: "/search",
                 data: $('#search').serialize(),
+<<<<<<< HEAD
                 success: function (data) {
                     html = [];
                     subhtml = [];
@@ -116,6 +154,10 @@
                         fillContents(contents, subhtml);
                         i ++;
                     });
+=======
+                success: function(data) {
+					rep_data = data;
+>>>>>>> a44fba48701eabfe28a69417770dd6e58b8e2381
                 },
                 error: function () {
                     alert("ERROR");
