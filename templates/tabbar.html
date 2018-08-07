@@ -2,120 +2,128 @@
 <html>
 
 <head>
-	<meta charset="utf-8">
-	<title>Hello MUI</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black">
-	<script type="text/javascript" src="static/js/jquery-3.1.1.min.js" ></script>
+    <meta charset="utf-8">
+    <title>Hello MUI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script type="text/javascript" src="static/js/jquery-3.1.1.min.js"></script>
 
-	<!--标准mui.css-->
-	<link rel="stylesheet" href="/static/css/mui.min.css">
-	<!--App自定义的css-->
-	<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
-	<style>
-		.mui-row.mui-fullscreen>[class*="mui-col-"] {
-			height: 100%;
-		}
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="/static/css/mui.min.css">
+    <!--App自定义的css-->
+    <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+    <style>
+        .mui-row.mui-fullscreen>[class*="mui-col-"] {
+            height: 100%;
+        }
 
-		.mui-col-xs-3,
-		.mui-control-content {
-			overflow-y: auto;
-			height: 100%;
-		}
+        .mui-col-xs-3,
+        .mui-control-content {
+            overflow-y: auto;
+            height: 100%;
+        }
 
-		.mui-segmented-control .mui-control-item {
-			line-height: 50px;
-			width: 100%;
-		}
+        .mui-segmented-control .mui-control-item {
+            line-height: 50px;
+            width: 100%;
+        }
 
-		.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
-			background-color: #fff;
-		}
-	</style>
-	<script>
-		 function search() {
+        .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+            background-color: #fff;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <div style="margin-left: 70%">
+            <form id="search" onsubmit="return false;">
+                <input type="text" name="keyword" style="width: 70%">
+                <button style="width: 20%" onclick="search()">Search</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="mui-content mui-row mui-fullscreen">
+        <div class="mui-col-xs-3">
+            <div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
+            </div>
+        </div>
+        <div id="segmentedControlContents" class="mui-col-xs-9" style="border-left: 1px solid #c8c7cc;">
+
+        </div>
+    </div>
+    <script src="/static/js/mui.min.js"></script>
+    <script>
+        mui.init({
+            swipeBack: true //启用右滑关闭功能
+        });
+        var controls = document.getElementById("segmentedControls");
+        var contents = document.getElementById("segmentedControlContents");
+        var html = []; //左侧栏
+        var subhtml = []; //右侧栏
+
+        function fillContents(tag, arr) {
+            for (child of tag.children) {
+                tag.removeChild(child);
+            }
+            tag.innerHTML = arr.join('');
+        }
+
+        var i = 1, j = 1;
+
+        var map_dict = { '上海国际能源交易中心': '上期能源', '上海期货交易所': '上期所', '郑州商品交易所': '郑商所', '大连商品交易所': '大商所', '中金所': '中金所', '芝加哥商业交易所': 'CME', '欧洲期货交易所': 'EUREX', '香港交易所': 'HKEX', '美国洲际交易所': 'ICE', '伦敦金属交易所': 'LME', '新加坡交易所': 'SGX', '东京商品交易所': 'TOCOM', '马来西亚交易所': 'MYX' }
+
+        {% for c in context %}
+        if ('{{c}}' in map_dict) {
+            var map_c = map_dict['{{c}}']
+        } else {
+            map_c = '{{c}}'
+        }
+        html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
+        subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
+        {% for item in context[c] %}
+        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety={{item}}&location={{c}}" target="_blank">' + '{{item}}' + '</a>' + '</li>');
+        {% endfor %}
+        subhtml.push('</ul></div>');
+        i++;
+        {% endfor %}
+        fillContents(controls, html);
+        fillContents(contents, subhtml);
+
+        //默认选中第一个
+        controls.querySelector('.mui-control-item').classList.add('mui-active');
+        contents.querySelector('.mui-control-content').classList.add('mui-active');
+
+        function search() {
             $.ajax({
 
                 type: "POST",
-                url: "/search" ,
+                url: "/search",
                 data: $('#search').serialize(),
-                success: function (result,data) {
-                    console.log(result);
-                    if (result.resultCode == 200) {
-                        alert("SUCCESS:"+data);//add
-                    }
-                    ;
+                success: function (data) {
+                    html = [];
+                    subhtml = [];
+                    var i = 1;
+                    JSON.parse(data).forEach(element => {
+                        html.push('<a class="mui-control-item" href="#content' + i + '">' + element['exchange'] + '</a>');
+                        subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
+                        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety='+element['product']+'&location='+element['exchange']+'" target="_blank">' + element['product'] + '</a>' + '</li>');
+                        subhtml.push('</ul></div>');
+                        fillContents(controls, html);
+                        fillContents(contents, subhtml);
+                        i ++;
+                    });
                 },
-                error : function() {
+                error: function () {
                     alert("ERROR");
                 }
             });
         }
 
-	</script>
-</head>
-
-<body>
-	<header class="mui-bar mui-bar-nav">
-		<div style="margin-left: 70%">
-			<form id="search" onsubmit="return false;" >
-				<input type="text" name="keyword" style="width: 70%">
-				<button style="width: 20%" onclick="search()">Search</button>
-			</form>
-		</div>
-	</header>
-
-	<div class="mui-content mui-row mui-fullscreen">
-		<div class="mui-col-xs-3">
-			<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
-			</div>
-		</div>
-		<div id="segmentedControlContents" class="mui-col-xs-9" style="border-left: 1px solid #c8c7cc;">
-
-		</div>
-	</div>
-	<script src="/static/js/mui.min.js"></script>
-	<script>
-		mui.init({
-			swipeBack: true //启用右滑关闭功能
-		});
-		var controls = document.getElementById("segmentedControls");
-		var contents = document.getElementById("segmentedControlContents");
-		var html = []; //左侧栏
-		var subhtml = []; //右侧栏
-
-		function fillContents(tag, arr){
-			for(child of tag.children){
-				tag.removeChild(child);
-			}
-			tag.innerHTML = arr.join('');
-		}
-
-		var i = 1, j = 1;
-
-		{% for c in context %}
-		var map_dict = { '上海国际能源交易中心': '上期能源', '上海期货交易所': '上期所', '郑州商品交易所': '郑商所', '大连商品交易所': '大商所', '中金所': '中金所', '芝加哥商业交易所': 'CME', '欧洲期货交易所': 'EUREX', '香港交易所': 'HKEX', '美国洲际交易所': 'ICE', '伦敦金属交易所': 'LME', '新加坡交易所': 'SGX', '东京商品交易所': 'TOCOM', '马来西亚交易所': 'MYX' }
-		if ('{{c}}' in map_dict) {
-			var map_c = map_dict['{{c}}']
-		} else {
-			map_c = '{{c}}'
-		}
-		html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
-		subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
-		{% for item in context[c] %}
-		subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety={{item}}&location={{c}}" target="_blank">' + '{{item}}' + '</a>' + '</li>');
-		{% endfor %}
-		subhtml.push('</ul></div>');
-		i++;
-		{% endfor %}
-		fillContents(controls, html);
-		fillContents(contents, subhtml);
-
-		//默认选中第一个
-		controls.querySelector('.mui-control-item').classList.add('mui-active');
-		contents.querySelector('.mui-control-content').classList.add('mui-active');
-	</script>
+    </script>
 
 </body>
 
