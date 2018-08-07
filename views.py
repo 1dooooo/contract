@@ -79,9 +79,9 @@ def search():
 
 @app.route('/delete', methods=['POST'])
 def delete():
-    product = request.form['product']
-    exchange = request.form['exchange']
-    DBSession().query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).delete()
+    data = request.form['item']
+    print(data)
+    # DBSession().query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).delete()
 
 @app.route('/modify', methods=['POST'])
 def modify():
