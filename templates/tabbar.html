@@ -85,6 +85,13 @@
 		var html = []; //左侧栏
 		var subhtml = []; //右侧栏
 
+		function fillContents(tag, arr){
+			for(child of tag.children){
+				tag.removeChild(child);
+			}
+			tag.innerHTML = arr.join('');
+		}
+
 		var i = 1, j = 1;
 
 		{% for c in context %}
@@ -102,10 +109,9 @@
 		subhtml.push('</ul></div>');
 		i++;
 		{% endfor %}
+		fillContents(controls, html);
+		fillContents(contents, subhtml);
 
-		controls.innerHTML = html.join('');
-
-		contents.innerHTML = subhtml.join('');
 		//默认选中第一个
 		controls.querySelector('.mui-control-item').classList.add('mui-active');
 		contents.querySelector('.mui-control-content').classList.add('mui-active');
