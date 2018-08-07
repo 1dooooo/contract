@@ -57,6 +57,40 @@
     </div>
     <script src="/static/js/mui.min.js"></script>
     <script>
+        function deleteItem(event){
+            inp = event.target;
+            item = inp.parentElement.children[0]['href'].split('?')[1];
+            $.ajax({
+					type: "POST",
+					url:" /delete",
+					data: {"data":item},
+					success: function(){
+						alert("DELETE SUCCESS!")
+					},
+					error: function(){
+						alert("DELETE ERROR!");
+					}
+				});
+        }
+
+        function modifyItem(){
+            $.ajax({
+                    inp = event.target;
+                    item = inp.parentElement.children[0]['href'].split('?')[1];
+					type: "POST",
+					url:" /modify",
+					data: {"data":item},
+					success: function(){
+						alert("DELETE SUCCESS!")
+					},
+					error: function(){
+						alert("DELETE ERROR!");
+					}
+				});
+        }
+
+
+
         mui.init({
             swipeBack: true //启用右滑关闭功能
         });
@@ -85,7 +119,7 @@
         html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
         {% for item in context[c] %}
-        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/admin?variety={{item}}&location={{c}}" target="_blank"><div style="height: 30px;line-height: 30px;text-align: text-align: inherit;">{{item}}' + '</a><input type="button" id="delete" value="delete" style="float: right;" ></input><input type="button" id="modify" value="modify" style="float: right;"></input></div>' + '</li>');
+        subhtml.push('<li class="mui-table-view-cell">' + '<div style="height: 30px;line-height: 30px;text-align: text-align: inherit;"><a href="/admin?variety={{item}}&location={{c}}" target="_blank">{{item}}' + '</a><input type="button" id="delete" value="delete" style="float: right;" ></input><input type="button" id="modify" value="modify" style="float: right;"></input></div>' + '</li>');
         {% endfor %}
         subhtml.push('</ul></div>');
         i++;
@@ -114,7 +148,7 @@
                         }
                         html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
                         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
-                        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/admin?variety=' + element['product'] + '&location=' + element['exchange'] + '" target="_blank">' + element['product'] + '</a>' + '</li>');
+                        subhtml.push('<li class="mui-table-view-cell">' + '<div style="height: 30px;line-height: 30px;text-align: text-align: inherit;"><a href="/admin?variety=' + element['product'] + '&location=' + element['exchange'] + '" target="_blank">' + element['product'] + '</a>' + '<input type="button" id="delete" value="delete" style="float: right;" ></input><input type="button" id="modify" value="modify" style="float: right;"></input></div></li>');
                         subhtml.push('</ul></div>');
                         fillContents(controls, html);
                         fillContents(contents, subhtml);
