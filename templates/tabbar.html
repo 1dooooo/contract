@@ -85,7 +85,7 @@
         html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
         {% for item in context[c] %}
-        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety={{item}}&location={{c}}" target="_blank">' + '{{item}}' + '</a>' + '</li>');
+        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety={{item}}&location={{c}}" target="_blank">{{item}}' + '</a>' + '</li>');
         {% endfor %}
         subhtml.push('</ul></div>');
         i++;
@@ -114,11 +114,11 @@
                         }
                         html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
                         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
-                        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety='+element['product']+'&location='+element['exchange']+'" target="_blank">' + element['product'] + '</a>' + '</li>');
+                        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety=' + element['product'] + '&location=' + element['exchange'] + '" target="_blank">' + element['product'] + '</a>' + '</li>');
                         subhtml.push('</ul></div>');
                         fillContents(controls, html);
                         fillContents(contents, subhtml);
-                        i ++;
+                        i++;
                     });
                 },
                 error: function () {
