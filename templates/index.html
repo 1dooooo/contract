@@ -1,13 +1,15 @@
+<!doctype html>
 <html lang="en">
-	
+
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<title>CONTRACT</title>
 		<script type="text/javascript" src="static/js/jquery-3.1.1.min.js" ></script>
-		<link rel="stylesheet" href="static/css/left.css">
+		<!-- <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'> -->
+		<link rel="stylesheet" href="static/css/sideList.css">
 	</head>
-	
+
 	<body>
 
 		<div class="meny">
@@ -23,23 +25,20 @@
 
 		<div class="meny-arrow"></div>
 
-		<div class="contents" id="contents">
+		<div class="contents">
 			
 		</div>
 
-
-		<script src="static/js/meny.min.js"></script>
+		<script src="static/js/meny.js"></script>
 		<script>
- 			var meny;
 			function changePage(url){
 				var root = location.href.split('?')[0];
 				url =root+"?u="+root+url;
 				location.href=url; 
 
 			};
-			
 			// Create an instance of Meny
-			meny = Meny.create({
+			var meny = Meny.create({
 				// The element that will be animated in from off screen
 				menuElement: document.querySelector( '.meny' ),
 
@@ -47,7 +46,7 @@
 				contentsElement: document.querySelector( '.contents' ),
 
 				// [optional] The alignment of the menu (top/right/bottom/left)
-				position: Meny.getQuery().p || 'right',
+				position: Meny.getQuery().p || 'left',
 
 				// [optional] The height of the menu (when using top/bottom position)
 				height: 200,
@@ -56,14 +55,20 @@
 				width: 260,
 
 				// [optional] Distance from mouse (in pixels) when menu should open
-				threshold: 40
+				threshold: 40,
+
+				// [optional] Use mouse movement to automatically open/close
+				mouse: true,
+
+				// [optional] Use touch swipe events to open/close
+				touch: true
 			});
 
 			// API Methods:
 			// meny.open();
 			// meny.close();
-			//meny.isOpen();
-			
+			// meny.isOpen();
+
 			// Events:
 			// meny.addEventListener( 'open', function(){ console.log( 'open' ); } );
 			// meny.addEventListener( 'close', function(){ console.log( 'close' ); } );
@@ -73,10 +78,12 @@
 				var contents = document.querySelector( '.contents' );
 				contents.style.padding = '0px';
 				contents.innerHTML = '<div class="cover"></div><iframe src="'+ Meny.getQuery().u +'" style="width: 100%; height: 100%; border: 0; position: absolute;"></iframe>';
-			} else {
+			}else {
 				changePage('show');
 			}
 		</script>
+
+		<!-- <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script> -->
 
 	</body>
 </html>

@@ -73,10 +73,8 @@ def add_in():
 @app.route('/search', methods=['POST'])
 def search():
     fcs = []
-    if request.args:
-        keyword = request.args['keyword']
-        fcs = DBSession().query(FutureContract, FutureContract.exchange, FutureContract.product).filter(FutureContract.product == keyword)
-    
+    keyword = request.form['keyword']
+    fcs = [{'product':fc[0], 'exchange':fc[1]} for fc in DBSession().query(FutureContract.product, FutureContract.exchange).filter(FutureContract.product == keyword).all()]
     return json.dumps(fcs)
 
 if __name__ == '__main__':
