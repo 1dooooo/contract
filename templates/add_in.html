@@ -223,7 +223,16 @@
 				<input class="reset" type="button" value="Reset" onclick="reset(); return false" />
 			</form>
 		</div>
-
+		<script>
+			function setValue(){
+				{% if context %}
+				{% for c in context %}
+				document.getElementById('{{c}}').value = '{{context[c]}}'
+				{% endfor %}
+				{% endif %}
+			}
+			setValue();
+		</script>
 	</body>
 
 </html>

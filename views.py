@@ -67,8 +67,8 @@ def add_in():
         session = DBSession()
         session.add(fc)
         session.commit()
-
-    return render_template('add_in.html')
+    tester = DBSession().query(FutureContract).filter(FutureContract.product == '白银').first().to_raw_dict()
+    return render_template('add_in.html', context=tester)
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -77,20 +77,19 @@ def search():
     fcs = [{'product':fc[0], 'exchange':fc[1]} for fc in DBSession().query(FutureContract.product, FutureContract.exchange).filter(FutureContract.product.like("%"+keyword+"%")).all()]
     return json.dumps(fcs)
 
-<<<<<<< HEAD
-=======
 @app.route('/delete', methods=['POST'])
 def delete():
-    status = ""
-
-    return status
+    product = request.form['product']
+    exchange = request.form['exchange']
+    DBSession().query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).delete()
 
 @app.route('/modify', methods=['POST'])
 def modify():
-    status = ""
-    
-    return status
->>>>>>> dcc7c2fa2204f28863a7ba8f34bd8a412f491737
+    product = request.form['product']
+    exchange = request.form['exchange']
+    context = DBSession().query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).all().to_raw_dict()
+
+    return render_template('add_in.html', context = context)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
