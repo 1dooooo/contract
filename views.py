@@ -74,8 +74,20 @@ def add_in():
 def search():
     fcs = []
     keyword = request.form['keyword']
-    fcs = [{'product':fc[0], 'exchange':fc[1]} for fc in DBSession().query(FutureContract.product, FutureContract.exchange).filter(FutureContract.product == keyword).all()]
+    fcs = [{'product':fc[0], 'exchange':fc[1]} for fc in DBSession().query(FutureContract.product, FutureContract.exchange).filter(FutureContract.product.like("%"+keyword+"%")).all()]
     return json.dumps(fcs)
+
+@app.route('/delete', methods=['POST'])
+def delete():
+    status = ""
+
+    return status
+
+@app.route('/modify', methods=['POST'])
+def modify():
+    status = ""
+    
+    return status
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

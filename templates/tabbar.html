@@ -99,7 +99,6 @@
 
         function search() {
             $.ajax({
-
                 type: "POST",
                 url: "/search",
                 data: $('#search').serialize(),
@@ -108,7 +107,12 @@
                     subhtml = [];
                     var i = 1;
                     JSON.parse(data).forEach(element => {
-                        html.push('<a class="mui-control-item" href="#content' + i + '">' + element['exchange'] + '</a>');
+                        if (element['exchange'].split('(')[0] in map_dict) {
+                            map_c = map_dict[element['exchange'].split('(')[0]];
+                        } else {
+                            map_c = element['exchange']
+                        }
+                        html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
                         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
                         subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety='+element['product']+'&location='+element['exchange']+'" target="_blank">' + element['product'] + '</a>' + '</li>');
                         subhtml.push('</ul></div>');
