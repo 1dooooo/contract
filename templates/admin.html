@@ -73,23 +73,6 @@
             });
         }
 
-<<<<<<< HEAD
-        function modifyItem() {
-            inp = event.target;
-            item = inp.parentElement.children[0]['href'].split('?')[1];
-            $.ajax({
-
-                type: "POST",
-                url: " /modify",
-                data: { "data": item },
-                success: function () {
-                    alert("DELETE SUCCESS!")
-                },
-                error: function () {
-                    alert("DELETE ERROR!");
-                }
-            });
-=======
         function modifyItem(){
             inp = event.target;
             item = inp.parentElement.children[0]['href'].split('?')[1];
@@ -104,7 +87,6 @@
 						alert("DELETE ERROR!");
 					}
 				});
->>>>>>> 6fefcba160b7da2b5c66be40c4061eba30d35a21
         }
 
 
