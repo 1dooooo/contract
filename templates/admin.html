@@ -57,36 +57,37 @@
     </div>
     <script src="/static/js/mui.min.js"></script>
     <script>
-        function deleteItem(event){
+        function deleteItem(event) {
             inp = event.target;
             item = inp.parentElement.children[0]['href'].split('?')[1];
             $.ajax({
-					type: "POST",
-					url:" /delete",
-					data: {"data":item},
-					success: function(){
-						alert("DELETE SUCCESS!")
-					},
-					error: function(){
-						alert("DELETE ERROR!");
-					}
-				});
+                type: "POST",
+                url: " /delete",
+                data: { "data": item },
+                success: function () {
+                    alert("DELETE SUCCESS!")
+                },
+                error: function () {
+                    alert("DELETE ERROR!");
+                }
+            });
         }
 
-        function modifyItem(){
+        function modifyItem() {
+            inp = event.target;
+            item = inp.parentElement.children[0]['href'].split('?')[1];
             $.ajax({
-                    inp = event.target;
-                    item = inp.parentElement.children[0]['href'].split('?')[1];
-					type: "POST",
-					url:" /modify",
-					data: {"data":item},
-					success: function(){
-						alert("DELETE SUCCESS!")
-					},
-					error: function(){
-						alert("DELETE ERROR!");
-					}
-				});
+
+                type: "POST",
+                url: " /modify",
+                data: { "data": item },
+                success: function () {
+                    alert("DELETE SUCCESS!")
+                },
+                error: function () {
+                    alert("DELETE ERROR!");
+                }
+            });
         }
 
 
@@ -126,7 +127,7 @@
         {% endfor %}
         fillContents(controls, html);
         fillContents(contents, subhtml);
-        
+
         //默认选中第一个
         controls.querySelector('.mui-control-item').classList.add('mui-active');
         contents.querySelector('.mui-control-content').classList.add('mui-active');
