@@ -70,13 +70,14 @@ def add_in():
 
     return render_template('add_in.html')
 
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods=['POST'])
 def search():
     fcs = []
     if request.args:
         keyword = request.args['keyword']
         fcs = DBSession().query(FutureContract, FutureContract.exchange, FutureContract.product).filter(FutureContract.product == keyword)
-    return render_template('search.html', fcs = fcs)
+    
+    return json.dumps(fcs)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
