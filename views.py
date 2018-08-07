@@ -3,6 +3,7 @@ import collections
 import json
 import csv
 import os
+from urllib import parse
 
 app = Flask(__name__)
 
@@ -99,8 +100,9 @@ def admin():
 
 @app.route('/delete', methods=['POST'])
 def delete():
-    data = request.form['item']
-    print(data)
+    data = request.form['data']
+    print(parse.unquote(data))
+    return json.dumps({'status':200})
     # DBSession().query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).delete()
 
 @app.route('/modify', methods=['POST'])
