@@ -74,9 +74,9 @@
         }
 
         function modifyItem(){
+            inp = event.target;
+            item = inp.parentElement.children[0]['href'].split('?')[1];
             $.ajax({
-                    inp = event.target;
-                    item = inp.parentElement.children[0]['href'].split('?')[1];
 					type: "POST",
 					url:" /modify",
 					data: {"data":item},
@@ -119,7 +119,7 @@
         html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
         {% for item in context[c] %}
-        subhtml.push('<li class="mui-table-view-cell">' + '<div style="height: 30px;line-height: 30px;text-align: text-align: inherit;"><a href="/admin?variety={{item}}&location={{c}}" target="_blank">{{item}}' + '</a><input type="button" id="delete" value="delete" style="float: right;" ></input><input type="button" id="modify" value="modify" style="float: right;"></input></div>' + '</li>');
+        subhtml.push('<li class="mui-table-view-cell">' + '<div style="height: 30px;line-height: 30px;text-align: text-align: inherit;"><a href="/admin?variety={{item}}&location={{c}}" target="_blank">{{item}}' + '</a><input type="button" id="delete" value="delete" onclick="deleteItem()" style="float: right;" ></input><input type="button" id="modify" value="modify" onclick="modifyItem()" style="float: right;"></input></div>' + '</li>');
         {% endfor %}
         subhtml.push('</ul></div>');
         i++;
