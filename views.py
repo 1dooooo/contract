@@ -69,5 +69,14 @@ def add_in():
         session.commit()
 
     return render_template('add_in.html')
+
+@app.route('/search', methods=['GET'])
+def search():
+    fcs = []
+    if request.args:
+        keyword = request.args['keyword']
+        fcs = DBSession().query(FutureContract, FutureContract.exchange, FutureContract.product).filter(FutureContract.product == keyword)
+    return render_template('search.html', fcs = fcs)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
