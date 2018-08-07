@@ -85,7 +85,7 @@
         html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
         {% for item in context[c] %}
-        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety={{item}}&location={{c}}" target="_blank">{{item}}' + '</a>' + '</li>');
+        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety={{item}}&location={{c}}" target="_blank">' + '{{item}}' + '</a>');
         {% endfor %}
         subhtml.push('</ul></div>');
         i++;
