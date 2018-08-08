@@ -60,15 +60,14 @@ def show(variety = None):
     return render_template('tabbar.html', context = context)
 
 
-@app.route('/add_in', methods=['POST', 'GET'])
-def add_in():
+@app.route('/add', methods=['POST', 'GET'])
+def add():
     if request.method == 'POST':
         fc = FutureContract(**{key: request.form[key] for key in request.form})
         session = DBSession()
         session.add(fc)
         session.commit()
-    tester = DBSession().query(FutureContract).filter(FutureContract.product == '白银').first().to_raw_dict()
-    return render_template('add_in.html', context=tester)
+    return render_template('add.html')
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -121,7 +120,7 @@ def modify():
     exchange = request.form['exchange']
     context = DBSession().query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).all().to_raw_dict()
 
-    return render_template('add_in.html', context = context)
+    return render_template('add.html', context = context)
 
 @app.route('/update', methods=['POST'])
 def update():
