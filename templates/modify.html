@@ -15,13 +15,14 @@
 					}
 				}
 			}
-			function updata(){
+			function update(){
 				$.ajax({
 					type: "POST",
-					url:" /updata",
-					data: $('#updata').serialize(),
+					url:" /update",
+					data: $('#update').serialize(),
 					success: function(){
-						alert("SUCCESS!")
+						alert("SUCCESS!");
+						parent.location.reload();
 					},
 					error: function(){
 						alert("ERROR!");
@@ -67,7 +68,7 @@
 					return true;
 				}
 			</script>
-			<form id="updata" onsubmit="return checkInput()">
+			<form id="update" onsubmit="return checkInput()">
 				<fieldset>
 					<legend>基本信息</legend>
 					<div class="form-row">
@@ -219,7 +220,7 @@
 					</div>
 				</fieldset> 
 
-				<input type="button" class="button" value="Submit" onclick="updata()" />
+				<input type="button" class="button" value="Submit" onclick="update()" />
 				<input class="button" type="button" value="Reset" onclick="reset(); return false" />
 			</form>
 		</div>

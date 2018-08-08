@@ -2,11 +2,11 @@ from sqlalchemy import Column, Text
 from sqlalchemy.ext.declarative import declarative_base
 import json
 
-
 # create Base Object
 Base = declarative_base()
 def to_dict(self):
-    with open('map_dict.json', 'r', encoding = 'utf-8') as f:
+    
+    with open('/var/www/contract/map_dict.json', 'r', encoding = 'utf-8') as f:
         map_dict = json.loads(f.read())
     tmp_dict = {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
     return {map_dict[key]:tmp_dict[key] for key in tmp_dict}

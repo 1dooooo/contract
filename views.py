@@ -35,6 +35,7 @@ def upload():
                 fc = FutureContract(**d)
                 session.add(fc)
             session.commit()
+            session.close()
 
     return render_template('upload.html')
 
@@ -44,7 +45,7 @@ def show(variety = None):
     if request.args:
         variety = request.args['variety']
         location = request.args['location']
-        contracts = DBSession().query(FutureContract).filter(FutureContract.product == variety, FutureContract.exchange == location).first().to_dict()
+        contracts = DBSession().query(FutureContract).filter(FutureContract.product == variety, FutureContract.exchange.like(location+'%')).first().to_dict()
         return render_template('contract.html', contracts = contracts)
 
     context = collections.defaultdict(list)
@@ -67,6 +68,7 @@ def add():
         session = DBSession()
         session.add(fc)
         session.commit()
+        session.close()
     return render_template('add.html')
 
 @app.route('/search', methods=['POST'])
@@ -81,7 +83,7 @@ def admin():
     if request.args:
         variety = request.args['variety']
         location = request.args['location']
-        contracts = DBSession().query(FutureContract).filter(FutureContract.product == variety, FutureContract.exchange == location).first().to_dict()
+        contracts = DBSession().query(FutureContract).filter(FutureContract.product == variety, FutureContract.exchange.like(location+'%')).first().to_dict()
         return render_template('contract.html', contracts = contracts)
 
     context = collections.defaultdict(list)
@@ -112,19 +114,30 @@ def delete():
     session = DBSession()
     session.query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).delete()
     session.commit()
+    session.close()
     return json.dumps({'ok':1})
 
-@app.route('/modify', methods=['POST'])
+@app.route('/modify', methods=['POST','GET'])
 def modify():
-    product = request.form['product']
-    exchange = request.form['exchange']
-    context = DBSession().query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).all().to_raw_dict()
-
-    return render_template('add.html', context = context)
+    product = request.args['variety']
+    exchange = request.args['location']
+    global modify_fc
+    session = DBSession()
+    modify_fc = session.query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).first()
+    session.commit()
+    context = modify_fc.to_raw_dict()
+    session.close()
+    return render_template('modify.html', context = context)
 
 @app.route('/update', methods=['POST'])
 def update():
-    pass
+    fc = FutureContract(**{key: request.form[key] for key in request.form})
+    session = DBSession()
+    session.delete(modify_fc)
+    session.add(fc)
+    session.commit()
+    session.close()
+    return json.dumps({'OK':1})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
