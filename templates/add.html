@@ -15,11 +15,11 @@
 					}
 				}
 			}
-			function addInItem(){
+			function addItem(){
 				$.ajax({
 					type: "POST",
-					url:" /add_in",
-					data: $('#addIn').serialize(),
+					url:" /add",
+					data: $('#add').serialize(),
 					success: function(){
 						alert("SUCCESS!")
 					},
@@ -67,7 +67,7 @@
 					return true;
 				}
 			</script>
-			<form id="addIn" onsubmit="return checkInput()">
+			<form id="add" onsubmit="return checkInput()">
 				<fieldset>
 					<legend>基本信息</legend>
 					<div class="form-row">
@@ -212,27 +212,56 @@
 						<div class="field-label"><label for="delivery_settlemnt_price">交割结算价</label>:</div>
 						<div class="field-widget"><input name="delivery_settlemnt_price" id="delivery_settlemnt_price" class="required" title="请输入 交割结算价" /></div>
 					</div>
-					
 					<div class="form-row">
 						<div class="field-label"><label for="last_delivery_date">交割日期</label>:</div>
 						<div class="field-widget"><textarea name="last_delivery_date" id="last_delivery_date" class="required"></textarea></div>
 					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="currency">结算货币</label>:</div>
+						<div class="field-widget"><textarea name="currency" id="currency" class="required"></textarea></div>
+					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="contract_month">合约月份</label>:</div>
+						<div class="field-widget"><textarea name="contract_month" id="contract_month" class="required"></textarea></div>
+					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="offer">报价</label>:</div>
+						<div class="field-widget"><textarea name="offer" id="offer" class="required"></textarea></div>
+					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="declaration_level">申报水平</label>:</div>
+						<div class="field-widget"><textarea name="declaration_level" id="declaration_level" class="required"></textarea></div>
+					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="last_delivery_date">首次通知日</label>:</div>
+						<div class="field-widget"><textarea name="last_delivery_date" id="last_delivery_date" class="required"></textarea></div>
+					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="currency">结算货币</label>:</div>
+						<div class="field-widget"><textarea name="currency" id="currency" class="required"></textarea></div>
+					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="contract_month">合约月份</label>:</div>
+						<div class="field-widget"><textarea name="contract_month" id="contract_month" class="required"></textarea></div>
+					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="offer">报价</label>:</div>
+						<div class="field-widget"><textarea name="offer" id="offer" class="required"></textarea></div>
+					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="declaration_level">申报水平</label>:</div>
+						<div class="field-widget"><textarea name="declaration_level" id="declaration_level" class="required"></textarea></div>
+					</div>
+					<div class="form-row">
+						<div class="field-label"><label for="first_notice_day">首次通知日</label>:</div>
+						<div class="field-widget"><textarea name="first_notice_day" id="first_notice_day" class="required"></textarea></div>
+					</div>
 				</fieldset> 
 
-				<input type="button" class="button" value="Submit" onclick="addInItem()" />
+				<input type="button" class="button" value="Submit" onclick="addItem()" />
 				<input class="reset" type="button" value="Reset" onclick="reset(); return false" />
 			</form>
 		</div>
-		<script>
-			function setValue(){
-				{% if context %}
-				{% for c in context %}
-				document.getElementById('{{c}}').value = '{{context[c]}}'
-				{% endfor %}
-				{% endif %}
-			}
-			setValue();
-		</script>
 	</body>
 
 </html>
