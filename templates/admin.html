@@ -65,6 +65,8 @@
                 url: " /delete",
                 data: { "data": item },
                 success: function () {
+                    li_tag = inp.parentElement.parentElement;
+                    li_tag.parentElement.removeChild(li_tag);
                     alert("DELETE SUCCESS!")
                 },
                 error: function () {

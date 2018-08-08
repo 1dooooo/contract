@@ -100,10 +100,20 @@ def admin():
 
 @app.route('/delete', methods=['POST'])
 def delete():
+    data_dict = {}
     data = request.form['data']
-    print(parse.unquote(data))
-    return json.dumps({'status':200})
-    # DBSession().query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).delete()
+    data = parse.unquote(data)
+    lst = data.split('&')
+    for exp in lst:
+        e = exp.split('=')
+        data_dict[e[0]] = e[1]
+
+    product = data_dict['variety']
+    exchange = data_dict['location']
+    session = DBSession()
+    session.query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).delete()
+    session.commit()
+    return json.dumps({'ok':1})
 
 @app.route('/modify', methods=['POST'])
 def modify():
@@ -112,6 +122,10 @@ def modify():
     context = DBSession().query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).all().to_raw_dict()
 
     return render_template('add_in.html', context = context)
+
+@app.route('/update', methods=['POST'])
+def update():
+    pass
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
