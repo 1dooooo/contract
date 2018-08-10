@@ -38,10 +38,10 @@
 
 <body>
     <header class="mui-bar mui-bar-nav">
-        <div style="height: 30px;line-height: 30px;text-align:inherit;">
+        <div>
             <form id="searchForm" onsubmit="return false;" style="float: right;">
-                <input type="text" id="searchInput" placeholder="please enter here" name="keyword" autofocus="autofocus" onkeypress="if(event.keyCode==13) {searchBtn.click();return false;}"  style="width: 70%;height: 80% auto;">
-                <input type="button" id="searchBtn" style="width: 25% ;height: 80% auto;" onclick="search()" value="Search"></input>
+                <input type="text" id="searchInput" placeholder="please enter here" name="keyword" autofocus="autofocus" onkeypress="if(event.keyCode==13) {searchBtn.click();return false;}"  style="width: 70%">
+                <input type="button" id="searchBtn" style="width: 25%;vertical-align:middle;" onclick="search()" value="Search"></input>
             </form>
         </div>
     </header>

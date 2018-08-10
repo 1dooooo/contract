@@ -38,11 +38,11 @@
 
 <body>
     <header class="mui-bar mui-bar-nav">
-        <div style="height: 30px;line-height: 30px;text-align:inherit;">
+        <div>
             <form id="searchForm" onsubmit="return false;" style="float: right;">
-                <input type="text" id="searchInput" placeholder="please enter here" name="keyword" autofocus="autofocus" onkeypress="if(event.keyCode==13) {searchBtn.click();return false;}"
-                    style="width: 70%;height: 80% auto;">
-                <input type="button" id="searchBtn" style="width: 25% ;height: 80% auto;" onclick="search()" value="Search"></input>
+                <input type="text" id="searchInput" placeholder="enter here..." name="keyword" autofocus="autofocus" onkeypress="if(event.keyCode==13) {searchBtn.click();return false;}"
+                    style="width: 70%;">
+                <input type="button" id="searchBtn" style="width: 25%;vertical-align:middle" onclick="search()" value="Search"></input>
             </form>
         </div>
     </header>
@@ -58,32 +58,6 @@
     </div>
     <script src="/static/js/mui.min.js"></script>
     <script>
-        function deleteItem(th) {
-            inp = th;
-            item = inp.parentElement.parentElement.children[0]['href'].split('?')[1];
-            $.ajax({
-                type: "POST",
-                url: " /delete",
-                data: { "data": item },
-                success: function () {
-                    li_tag = inp.parentElement.parentElement.parentElement;
-                    li_tag.parentElement.removeChild(li_tag);
-                    alert("DELETE SUCCESS!")
-                },
-                error: function () {
-                    alert("DELETE ERROR!");
-                }
-            });
-        }
-
-        function modifyItem(th) {
-            inp = th;
-            item = inp.parentElement.parentElement.children[0]['href'];
-            location.href = item.replace("admin", "modify")
-        }
-
-
-
         mui.init({
             swipeBack: false //启用右滑关闭功能
         });
@@ -97,6 +71,42 @@
                 tag.removeChild(child);
             }
             tag.innerHTML = arr.join('');
+        }
+
+
+        function deleteItem(th) {
+            inp = th;
+            item = inp.parentElement.parentElement.children[0]['href'].split('?')[1];
+            $.ajax({
+                type: "POST",
+                url: " /delete",
+                data: { "data": item },
+                success: function () {
+                    li_tag = inp.parentElement.parentElement.parentElement;
+                    ul_tag = li_tag.parentElement;
+                    ul_tag.removeChild(li_tag);
+                    if (ul_tag.children.length == 0) {
+                        mas = document.getElementsByClassName('mui-active');
+
+                        mas[0].parentElement.removeChild(mas[0]);
+                        ul_tag.parentElement.parentElement.removeChild(ul_tag.parentElement);
+                        
+                        controls.querySelector('.mui-control-item').classList.add('mui-active');
+                        contents.querySelector('.mui-control-content').classList.add('mui-active');
+
+                    }
+                    alert("DELETE SUCCESS!")
+                },
+                error: function () {
+                    alert("DELETE ERROR!");
+                }
+            });
+        }
+
+        function modifyItem(th) {
+            inp = th;
+            item = inp.parentElement.parentElement.children[0]['href'];
+            location.href = item.replace("admin", "modify")
         }
 
         var i = 1, j = 1;
@@ -140,22 +150,32 @@
                             html = [];
                             subhtml = [];
                             var i = 1;
-                            JSON.parse(data).forEach(element => {
-                                if (element['exchange'].split('(')[0] in map_dict) {
-                                    map_c = map_dict[element['exchange'].split('(')[0]];
+
+                            jdat = JSON.parse(data);
+                            for (exchange in jdat) {
+                                console.log(exchange)
+                                if (exchange in map_dict) {
+                                    map_c = map_dict[exchange];
                                 } else {
-                                    map_c = element['exchange']
+                                    map_c = exchange;
                                 }
                                 html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
                                 subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
-                                subhtml.push('<li class="mui-table-view-cell">' + '<div style="line-height:200%;"><a href="/admin?variety=' + element['product'] + '&location=' + element['exchange'] + '" target="_blank">' + element['product'] + '</a>' + '<input type="button" onclick="deleteItem(this)" value="delete"></input><input type="button" onclick = "modifyItem(this)" value="modify""></input></div></li>');
+                                for (product in jdat[exchange]) {
+                                    subhtml.push('<li class="mui-table-view-cell">' + '<div style="line-height:200%;"><a href="/admin?variety=' + jdat[exchange][product] + '&location=' + exchange + '" target="_blank">' + jdat[exchange][product] + '</a><div style="float:right;">' + '<input type="button" onclick="deleteItem(this)" value="delete"></input><input type="button" onclick = "modifyItem(this)" value="modify""></input></div></div></li>');
+                                }
+
                                 subhtml.push('</ul></div>');
-                                fillContents(controls, html);
-                                fillContents(contents, subhtml);
-                                controls.querySelector('.mui-control-item').classList.add('mui-active');
-                                contents.querySelector('.mui-control-content').classList.add('mui-active');
                                 i++;
-                            });
+
+                            }
+                            fillContents(controls, html);
+                            fillContents(contents, subhtml);
+
+                            //默认选中第一个
+                            controls.querySelector('.mui-control-item').classList.add('mui-active');
+                            contents.querySelector('.mui-control-content').classList.add('mui-active');
+
                         }
                     },
                     error: function () {

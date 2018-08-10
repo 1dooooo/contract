@@ -73,9 +73,16 @@ def add():
 
 @app.route('/search', methods=['POST'])
 def search():
-    fcs = []
+    fcs = collections.defaultdict(list)
     keyword = request.form['keyword']
-    fcs = [{'product':fc[0], 'exchange':fc[1]} for fc in DBSession().query(FutureContract.product, FutureContract.exchange).filter(FutureContract.product.like("%"+keyword+"%")).all()]
+    for fc in DBSession().query(FutureContract.exchange, FutureContract.product).filter(FutureContract.product.like("%"+keyword+"%")).all():
+        if fc.exchange.startswith('美国洲际交易所'):
+            fcs['美国洲际交易所'].append(fc[1])
+            continue
+        if fc.exchange.startswith('芝加哥商业交易所'):
+            fcs['芝加哥商业交易所'].append(fc[1])
+            continue
+        fcs[fc[0]].append(fc[1])
     return json.dumps(fcs)
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -108,11 +115,11 @@ def delete():
     for exp in lst:
         e = exp.split('=')
         data_dict[e[0]] = e[1]
-
     product = data_dict['variety']
     exchange = data_dict['location']
     session = DBSession()
-    session.query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange.like(exchange+'%')).delete()
+    fc = session.query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange.like(exchange+'%')).first()
+    session.delete(fc)
     session.commit()
     session.close()
     return json.dumps({'ok':1})
