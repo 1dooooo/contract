@@ -112,7 +112,7 @@ def delete():
     product = data_dict['variety']
     exchange = data_dict['location']
     session = DBSession()
-    session.query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).delete()
+    session.query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange.like(exchange+'%')).delete()
     session.commit()
     session.close()
     return json.dumps({'ok':1})
@@ -123,7 +123,7 @@ def modify():
     exchange = request.args['location']
     global modify_fc
     session = DBSession()
-    modify_fc = session.query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange == exchange).first()
+    modify_fc = session.query(FutureContract).filter(FutureContract.product == product, FutureContract.exchange.like(exchange+'%')).first()
     session.commit()
     context = modify_fc.to_raw_dict()
     session.close()

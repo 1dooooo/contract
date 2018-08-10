@@ -40,8 +40,9 @@
     <header class="mui-bar mui-bar-nav">
         <div style="height: 30px;line-height: 30px;text-align:inherit;">
             <form id="searchForm" onsubmit="return false;" style="float: right;">
-                <input type="text" id="searchInput" placeholder="please enter here" name="keyword" style="width: 70%">
-                <input type="button" style="width: 25%" onclick="search()" value="Search"></input>
+                <input type="text" id="searchInput" placeholder="please enter here" name="keyword" autofocus="autofocus" onkeypress="if(event.keyCode==13) {searchBtn.click();return false;}"
+                    style="width: 70%;height: 80% auto;">
+                <input type="button" id="searchBtn" style="width: 25% ;height: 80% auto;" onclick="search()" value="Search"></input>
             </form>
         </div>
     </header>
@@ -75,10 +76,10 @@
             });
         }
 
-        function modifyItem(th){
+        function modifyItem(th) {
             inp = th;
             item = inp.parentElement.children[0]['href'];
-            location.href=item.replace("admin", "modify")
+            location.href = item.replace("admin", "modify")
         }
 
 
@@ -125,36 +126,42 @@
 
         function search() {
             var val = document.getElementById("searchInput").value.replace(/(^\s*)|(\s*$)/g, '');//delete space
-            if(val == '' || val == undefined || val == null){
+            if (val == '' || val == undefined || val == null) {
                 alert("please enter keyword!")
-            }else{
-            $.ajax({
-                type: "POST",
-                url: "/search",
-                data: $('#searchForm').serialize(),
-                success: function (data) {
-                    html = [];
-                    subhtml = [];
-                    var i = 1;
-                    JSON.parse(data).forEach(element => {
-                        if (element['exchange'].split('(')[0] in map_dict) {
-                            map_c = map_dict[element['exchange'].split('(')[0]];
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/search",
+                    data: $('#searchForm').serialize(),
+                    success: function (data) {
+                        if (data == '[]') {
+                            alert("Nothing Find!") //this is a fucking bug
                         } else {
-                            map_c = element['exchange']
+                            html = [];
+                            subhtml = [];
+                            var i = 1;
+                            JSON.parse(data).forEach(element => {
+                                if (element['exchange'].split('(')[0] in map_dict) {
+                                    map_c = map_dict[element['exchange'].split('(')[0]];
+                                } else {
+                                    map_c = element['exchange']
+                                }
+                                html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
+                                subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
+                                subhtml.push('<li class="mui-table-view-cell">' + '<div style="height: 30px;line-height: 30px;text-align:inherit;"><a href="/admin?variety=' + element['product'] + '&location=' + element['exchange'] + '" target="_blank">' + element['product'] + '</a>' + '<input type="button" onclick="deleteItem(this)" value="delete" style="float: right;" ></input><input type="button" onclick = "modifyItem(this)" value="modify" style="float: right;"></input></div></li>');
+                                subhtml.push('</ul></div>');
+                                fillContents(controls, html);
+                                fillContents(contents, subhtml);
+                                controls.querySelector('.mui-control-item').classList.add('mui-active');
+                                contents.querySelector('.mui-control-content').classList.add('mui-active');
+                                i++;
+                            });
                         }
-                        html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
-                        subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
-                        subhtml.push('<li class="mui-table-view-cell">' + '<div style="height: 30px;line-height: 30px;text-align:inherit;"><a href="/admin?variety=' + element['product'] + '&location=' + element['exchange'] + '" target="_blank">' + element['product'] + '</a>' + '<input type="button" onclick="deleteItem(this)" value="delete" style="float: right;" ></input><input type="button" onclick = "modifyItem(this)" value="modify" style="float: right;"></input></div></li>');
-                        subhtml.push('</ul></div>');
-                        fillContents(controls, html);
-                        fillContents(contents, subhtml);
-                        i++;
-                    });
-                },
-                error: function () {
-                    alert("ERROR");
-                }
-            });
+                    },
+                    error: function () {
+                        alert("ERROR");
+                    }
+                });
             }
         }
 

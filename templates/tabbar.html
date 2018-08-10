@@ -38,10 +38,10 @@
 
 <body>
     <header class="mui-bar mui-bar-nav">
-        <div style="margin-left: 70%">
-            <form id="search" onsubmit="return false;">
-                <input type="text" name="keyword" style="width: 70%">
-                <button style="width: 20%" onclick="search()">Search</button>
+        <div style="height: 30px;line-height: 30px;text-align:inherit;">
+            <form id="searchForm" onsubmit="return false;" style="float: right;">
+                <input type="text" id="searchInput" placeholder="please enter here" name="keyword" autofocus="autofocus" onkeypress="if(event.keyCode==13) {searchBtn.click();return false;}"  style="width: 70%;height: 80% auto;">
+                <input type="button" id="searchBtn" style="width: 25% ;height: 80% auto;" onclick="search()" value="Search"></input>
             </form>
         </div>
     </header>
@@ -75,7 +75,7 @@
         var i = 1, j = 1;
 
         var map_dict = { '上海国际能源交易中心': '上期能源', '上海期货交易所': '上期所', '郑州商品交易所': '郑商所', '大连商品交易所': '大商所', '中金所': '中金所', '芝加哥商业交易所': 'CME', '欧洲期货交易所': 'EUREX', '香港交易所': 'HKEX', '美国洲际交易所': 'ICE', '伦敦金属交易所': 'LME', '新加坡交易所': 'SGX', '东京商品交易所': 'TOCOM', '马来西亚交易所': 'MYX' }
-        
+
         {% for c in context %}
         if ('{{c}}' in map_dict) {
             var map_c = map_dict['{{c}}']
@@ -98,35 +98,47 @@
         contents.querySelector('.mui-control-content').classList.add('mui-active');
 
         function search() {
-            $.ajax({
-                type: "POST",
-                url: "/search",
-                data: $('#search').serialize(),
-                success: function (data) {
-                    html = [];
-                    subhtml = [];
-                    var i = 1;
-                    JSON.parse(data).forEach(element => {
-                        if (element['exchange'].split('(')[0] in map_dict) {
-                            map_c = map_dict[element['exchange'].split('(')[0]];
+            var val = document.getElementById("searchInput").value.replace(/(^\s*)|(\s*$)/g, '');//delete space
+            if (val == '' || val == undefined || val == null) {
+                alert("please enter keyword!")
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/search",
+                    data: $('#searchForm').serialize(),
+                    success: function (data) {
+                        if (data == '[]') {
+                            alert("Nothing Find!") //this is a fucking bug
                         } else {
-                            map_c = element['exchange']
+                            html = [];
+                            subhtml = [];
+                            var i = 1;
+                            JSON.parse(data).forEach(element => {
+                                if (element['exchange'].split('(')[0] in map_dict) {
+                                    map_c = map_dict[element['exchange'].split('(')[0]];
+                                } else {
+                                    map_c = element['exchange']
+                                }
+                                html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
+                                subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
+                                subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety=' + element['product'] + '&location=' + element['exchange'] + '" target="_blank">' + element['product'] + '</a>' + '</li>');
+                                subhtml.push('</ul></div>');
+                                fillContents(controls, html);
+                                fillContents(contents, subhtml);
+                                controls.querySelector('.mui-control-item').classList.add('mui-active');
+                                contents.querySelector('.mui-control-content').classList.add('mui-active');
+                                i++;
+                            });
                         }
-                        html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
-                        subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
-                        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety=' + element['product'] + '&location=' + element['exchange'] + '" target="_blank">' + element['product'] + '</a>' + '</li>');
-                        subhtml.push('</ul></div>');
-                        fillContents(controls, html);
-                        fillContents(contents, subhtml);
-                        i++;
-                    });
-                },
-                error: function () {
-                    alert("ERROR");
-                }
-            });
+                    },
+                    error: function () {
+                        alert("ERROR");
+                    }
+                });
+            }
         }
-
+        
+        
     </script>
 
 </body>

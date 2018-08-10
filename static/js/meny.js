@@ -224,7 +224,7 @@ var Meny = {
 				dom.cover.style.left = 0;
 				dom.cover.style.top = 0;
 				dom.cover.style.zIndex = 1000;
-				dom.cover.style.visibility = 'hidden';
+				//dom.cover.style.visibility = 'hidden';  //ido
 				dom.cover.style.opacity = 0;
 
 				// Silence unimportant errors in IE8
@@ -445,7 +445,7 @@ var Meny = {
 			/// INPUT: /////////////////////////////////
 
 			function onMouseDown( event ) {
-				isMouseDown = true;
+				isMouseDown = true; 
 			}
 
 			function onMouseMove( event ) {
@@ -486,7 +486,7 @@ var Meny = {
 							break;
 
 						case POSITION_L:
-							if( x > config.width ) {
+							if( x > config.width-5 ) {//ido
 								close();
 							}
 							else if( x < config.threshold ) {
