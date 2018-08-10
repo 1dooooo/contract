@@ -85,13 +85,18 @@
         html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
         {% for item in context[c] %}
-        subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety={{item}}&location={{c}}" target="_blank">' + '{{item}}' + '</a>');
+        subhtml.push('<li class="mui-table-view-cell" style="display:none;">' + '<a href="/show?variety={{item}}&location={{c}}" target="_blank">' + '{{item}}' + '</a>');
         {% endfor %}
         subhtml.push('</ul></div>');
         i++;
         {% endfor %}
         fillContents(controls, html);
         fillContents(contents, subhtml);
+
+        
+        $("li:even").fadeIn(1500); 
+        $("li:odd").fadeIn(1000);   
+
 
         //默认选中第一个
         controls.querySelector('.mui-control-item').classList.add('mui-active');
@@ -113,22 +118,31 @@
                             html = [];
                             subhtml = [];
                             var i = 1;
-                            JSON.parse(data).forEach(element => {
-                                if (element['exchange'].split('(')[0] in map_dict) {
-                                    map_c = map_dict[element['exchange'].split('(')[0]];
+                            jdat = JSON.parse(data);
+                            for (exchange in jdat) {
+                                console.log(exchange)
+                                if (exchange in map_dict) {
+                                    map_c = map_dict[exchange];
                                 } else {
-                                    map_c = element['exchange']
+                                    map_c = exchange;
                                 }
                                 html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
                                 subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
-                                subhtml.push('<li class="mui-table-view-cell">' + '<a href="/show?variety=' + element['product'] + '&location=' + element['exchange'] + '" target="_blank">' + element['product'] + '</a>' + '</li>');
+                                for (product in jdat[exchange]) {
+                                    subhtml.push('<li class="mui-table-view-cell">' + '<a href="/admin?variety=' + jdat[exchange][product] + '&location=' + exchange + '" target="_blank">' + jdat[exchange][product] + '</a></li>');
+                                }
+
                                 subhtml.push('</ul></div>');
-                                fillContents(controls, html);
-                                fillContents(contents, subhtml);
-                                controls.querySelector('.mui-control-item').classList.add('mui-active');
-                                contents.querySelector('.mui-control-content').classList.add('mui-active');
                                 i++;
-                            });
+
+                            }
+                            fillContents(controls, html);
+                            fillContents(contents, subhtml);
+
+                            //默认选中第一个
+                            controls.querySelector('.mui-control-item').classList.add('mui-active');
+                            contents.querySelector('.mui-control-content').classList.add('mui-active');
+
                         }
                     },
                     error: function () {

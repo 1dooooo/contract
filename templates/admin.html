@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <script type="text/javascript" src="static/js/jquery-3.1.1.min.js"></script>
-
+    <script src="static/js/toast.js"></script>
     <!--标准mui.css-->
     <link rel="stylesheet" href="/static/css/mui.min.css">
     <!--App自定义的css-->
@@ -33,7 +33,6 @@
             background-color: #fff;
         }
     </style>
-
 </head>
 
 <body>
@@ -84,18 +83,15 @@
                 success: function () {
                     li_tag = inp.parentElement.parentElement.parentElement;
                     ul_tag = li_tag.parentElement;
-                    ul_tag.removeChild(li_tag);
+                    li_tag.parentElement.removeChild(li_tag);
                     if (ul_tag.children.length == 0) {
                         mas = document.getElementsByClassName('mui-active');
-
                         mas[0].parentElement.removeChild(mas[0]);
                         ul_tag.parentElement.parentElement.removeChild(ul_tag.parentElement);
-                        
                         controls.querySelector('.mui-control-item').classList.add('mui-active');
                         contents.querySelector('.mui-control-content').classList.add('mui-active');
-
                     }
-                    alert("DELETE SUCCESS!")
+                    Toast("DELETE SUCCESS!",1000);
                 },
                 error: function () {
                     alert("DELETE ERROR!");
@@ -122,13 +118,15 @@
         html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
         {% for item in context[c] %}
-        subhtml.push('<li class="mui-table-view-cell">' + '<div style="line-height:200%;"><a href="/admin?variety={{item}}&location={{c}}" target="_blank">{{item}}' + '</a><div style="float:right;"><input type="button" value="delete" onclick="deleteItem(this)" ></input><input type="button" value="modify" onclick="modifyItem(this)"></input></div></div>' + '</li>');
+        subhtml.push('<li class="mui-table-view-cell" >' + '<div style="line-height:200%;"><a href="/admin?variety={{item}}&location={{c}}" target="_blank">{{item}}' + '</a><div style="float:right;"><input type="button" value="delete" onclick="deleteItem(this)" ></input><input type="button" value="modify" onclick="modifyItem(this)"></input></div></div>' + '</li>');
         {% endfor %}
         subhtml.push('</ul></div>');
         i++;
         {% endfor %}
         fillContents(controls, html);
         fillContents(contents, subhtml);
+
+        
 
         //默认选中第一个
         controls.querySelector('.mui-control-item').classList.add('mui-active');
@@ -150,7 +148,6 @@
                             html = [];
                             subhtml = [];
                             var i = 1;
-
                             jdat = JSON.parse(data);
                             for (exchange in jdat) {
                                 console.log(exchange)
