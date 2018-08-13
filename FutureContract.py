@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Text
+from sqlalchemy import Column,String
 from sqlalchemy.ext.declarative import declarative_base
 import json
 
@@ -6,7 +6,7 @@ import json
 Base = declarative_base()
 def to_dict(self):
     
-    with open('/var/www/contract/map_dict.json', 'r', encoding = 'utf-8') as f:
+    with open('/www/wwwroot/idooooo.tk/contract/map_dict.json', 'r', encoding = 'utf-8') as f:
         map_dict = json.loads(f.read())
     tmp_dict = {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
     return {map_dict[key]:tmp_dict[key] for key in tmp_dict}
@@ -20,36 +20,36 @@ Base.to_raw_dict = to_raw_dict
 class FutureContract(Base):
     __tablename__ = 'contract'
 
-    exchange = Column(Text, default='')
-    product = Column(Text,primary_key=True,default='')
-    code = Column(Text,primary_key=True,default='')
-    unit = Column(Text, default='')
-    tick = Column(Text, default='')
-    last_trading_date = Column(Text, default='')
-    tradingTime = Column(Text, default='')
-    night_tradingtime = Column(Text, default='')
-    ltd_tradingtime = Column(Text, default='')
-    exch_fee = Column(Text, default='')
-    margin = Column(Text, default='')
-    max_handnum = Column(Text, default='')
-    delivery_method = Column(Text, default='')
-    exch_delivery_fee = Column(Text, default='')
-    delivery_unit = Column(Text, default='')
-    delivery_settlemnt_price = Column(Text, default='')
-    last_delivery_date = Column(Text, default='')
-    position_margin = Column(Text, default='')
-    raising_limit_margin1 = Column(Text, default='')
-    raising_limit_margin2 = Column(Text, default='')
-    dmargin_adjust_date = Column(Text, default='')
-    delivery_month_margin = Column(Text, default='')
-    raising_limit = Column(Text, default='')
-    raising_limit_1 = Column(Text, default='')
-    raising_limit_2 = Column(Text, default='')
-    position_limit = Column(Text, default='')
-    dMonth_position_limit = Column(Text, default='')
-    Pre_dmonth_position_limit = Column(Text, default='')
-    currency = Column(Text, default='')
-    contract_month = Column(Text, default='')
-    offer = Column(Text, default='')
-    declaration_level = Column(Text, default='')
-    first_notice_day = Column(Text, default='')
+    exchange = Column(String(300), default='')
+    product = Column(String(50),primary_key=True,default='')
+    code = Column(String(50),primary_key=True,default='')
+    unit = Column(String(300), default='')
+    tick = Column(String(300), default='')
+    last_trading_date = Column(String(300), default='')
+    tradingTime = Column(String(300), default='')
+    night_tradingtime = Column(String(300), default='')
+    ltd_tradingtime = Column(String(300), default='')
+    exch_fee = Column(String(300), default='')
+    margin = Column(String(300), default='')
+    max_handnum = Column(String(300), default='')
+    delivery_method = Column(String(300), default='')
+    exch_delivery_fee = Column(String(300), default='')
+    delivery_unit = Column(String(300), default='')
+    delivery_settlemnt_price = Column(String(300), default='')
+    last_delivery_date = Column(String(300), default='')
+    position_margin = Column(String(300), default='')
+    raising_limit_margin1 = Column(String(300), default='')
+    raising_limit_margin2 = Column(String(300), default='')
+    dmargin_adjust_date = Column(String(300), default='')
+    delivery_month_margin = Column(String(300), default='')
+    raising_limit = Column(String(300), default='')
+    raising_limit_1 = Column(String(300), default='')
+    raising_limit_2 = Column(String(300), default='')
+    position_limit = Column(String(300), default='')
+    dMonth_position_limit = Column(String(300), default='')
+    Pre_dmonth_position_limit = Column(String(300), default='')
+    currency = Column(String(300), default='')
+    contract_month = Column(String(300), default='')
+    offer = Column(String(300), default='')
+    declaration_level = Column(String(300), default='')
+    first_notice_day = Column(String(300), default='')
