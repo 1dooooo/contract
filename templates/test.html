@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="../static/css/mui.min.css">
+    <!--App自定义的css-->
+    <link rel="stylesheet" type="text/css" href="../static/css/app.css" />
+    <style>
+        .mui-row.mui-fullscreen>[class*="mui-col-"] {
+            height: 100%;
+        }
+
+        .mui-col-xs-3,
+        .mui-control-content {
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .mui-segmented-control .mui-control-item {
+            line-height: 50px;
+            width: 100%;
+        }
+
+        .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        Vue.component('contents', {
+            props: ['varietys'],
+            template: `
+                <ul>
+                    <li class="mui-table-view-cell" v-for="(variety, index) in varietys">
+                        <div style="line-height:200%;">
+                            <a v-bind:href="caturl(variety)" target="_blank" v-text="variety"></a>
+                            <div style="float:right;">
+                                <input type="button" value="delete" v-on:click="deleteItem(index)"></input>
+                                <input type="button" value="modify" v-on:sclick="$emit(\'modify\')"></input>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            `,
+            methods: {
+                caturl: function (variety) {
+                    return "/admin?variety=" + variety + "&location=" + vm.current;
+                },
+                deleteItem: function (index) {
+                    this.varietys.splice(index, 1);
+                    if (this.varietys.length == 0) {
+                        delete (vm.contexts[vm.current]);
+                    }
+                }
+            }
+        })
+        Vue.component('controls', {
+            props: ['contexts'],
+            template: `
+                <ul>
+                    <li style="list-style-type:none;" v-for="(variety, location) in contexts">
+                        <button v-text="location" v-on:click="onClick" style="width:100%; height:px"></button>
+                    </li>
+                </ul>
+            `,
+            methods: {
+                onClick: function (event) {
+                    vm.current = event.target.innerText;
+                    vm.leftArray = vm.contexts[vm.current];
+                }
+            }
+        })
+    </script>
+    <div id="components-demo" class="mui-content mui-row mui-fullscreen">
+        <div class="mui-col-xs-3">
+            <div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
+                <controls v-bind:contexts="contexts"></controls>
+            </div>
+        </div>
+        <div id="segmentedControlContents" class="mui-col-xs-9" style="border-left: 1px solid #c8c7cc;">
+            <contents v-bind:varietys="leftArray"></contents>
+        </div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#components-demo",
+            data: {
+                current: '',
+                leftArray: [],
+                contexts: {}
+            },
+            created: function () {
+                window.axios.get('http://192.168.23.179/contract/show').then(({ data }) => {
+                    alert(data);
+                    this.contexts = data;
+                });
+            }
+        })
+    </script>
+</body>
+
+</html>
