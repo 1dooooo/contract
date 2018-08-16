@@ -39,7 +39,7 @@ def upload():
 
     return render_template('upload.html')
 
-
+@app.route('/admin', methods = ['GET', 'POST'])
 @app.route('/show', methods = ['GET', 'POST'])
 def show(variety = None):
     if request.args:
@@ -58,7 +58,7 @@ def show(variety = None):
             context['芝加哥商业交易所'].append(fc.product)
             continue
         context[fc.exchange].append(fc.product)
-    return render_template('tabbar.html', context = context)
+    return render_template(request.path + '.html', context = context)
 
 
 @app.route('/add', methods=['POST', 'GET'])
@@ -84,26 +84,6 @@ def search():
             continue
         fcs[fc[0]].append(fc[1])
     return json.dumps(fcs)
-
-@app.route('/admin', methods=['GET', 'POST'])
-def admin():
-    if request.args:
-        variety = request.args['variety']
-        location = request.args['location']
-        contracts = DBSession().query(FutureContract).filter(FutureContract.product == variety, FutureContract.exchange.like(location+'%')).first().to_dict()
-        return render_template('contract.html', contracts = contracts)
-
-    context = collections.defaultdict(list)
-    fcs = DBSession().query(FutureContract, FutureContract.exchange, FutureContract.product)
-    for fc in fcs:
-        if fc.exchange.startswith('美国洲际交易所'):
-            context['美国洲际交易所'].append(fc.product)
-            continue
-        if fc.exchange.startswith('芝加哥商业交易所'):
-            context['芝加哥商业交易所'].append(fc.product)
-            continue
-        context[fc.exchange].append(fc.product)
-    return render_template('admin.html',context=context)
 
 
 @app.route('/delete', methods=['POST'])
