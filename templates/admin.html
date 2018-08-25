@@ -145,7 +145,7 @@
                 $.ajax({
                     type: "POST",
                     url: "/search",
-                    data: $('#searchForm').serialize(),
+                    data: { "keyword": val},
                     success: function (data) {
                         if (data == '[]') {
                             alert("Nothing Find!") //this is a fucking bug
@@ -160,10 +160,10 @@
                                 for (item of response_data[exchange]) {
                                     subhtml.push(
                                         '<li class="mui-table-view-cell"><div style="line-height:200%;">\
-                                            <a href="/admin/' + item[0] + '" target="_blank">' + item[1] + '</a>\
+                                            <a href="/admin/' + item["id"] + '" target="_blank">' + item["product"] + '</a>\
                                             <div style="float:right;">\
-                                                <input type="button" onclick="deleteItem(this, ' + item[0] +' )" value="delete"></input>\
-                                                <input type="button" onclick = "modifyItem(this, ' + item[0] + ')" value="modify""></input>\
+                                                <input type="button" onclick="deleteItem(this, ' + item["id"] +' )" value="delete"></input>\
+                                                <input type="button" onclick = "modifyItem(this, ' + item["id"] + ')" value="modify""></input>\
                                             </div>\
                                         </li>'
                                     );

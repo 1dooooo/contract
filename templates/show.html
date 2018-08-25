@@ -104,7 +104,7 @@
                 $.ajax({
                     type: "POST",
                     url: "/search",
-                    data: $('#searchForm').serialize(),
+                    data: { "keyword": val},
                     success: function (data) {
                         if (data == '[]') {
                             alert("Nothing Find!") //this is a fucking bug
