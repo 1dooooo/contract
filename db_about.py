@@ -2,7 +2,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from FutureContract import Base
 
-engine = create_engine('postgresql://postgres:yisheng@192.168.23.180:5432/postgres')
+engine = create_engine('postgresql://postgres:sun4213@localhost:5432/contract')
 
 DBSession = sessionmaker(bind=engine)
 

@@ -7,7 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- 引入jquery -->
     <script type="text/javascript" src="static/js/jquery-3.1.1.min.js"></script>
+    <!-- 引入toast -->
     <script src="static/js/toast.js"></script>
     <!--标准mui.css-->
     <link rel="stylesheet" href="/static/css/mui.min.css">
@@ -73,13 +75,13 @@
         }
 
 
-        function deleteItem(th) {
+        function deleteItem(th, index) {
+            console.log(index)
             inp = th;
-            item = inp.parentElement.parentElement.children[0]['href'].split('?')[1];
             $.ajax({
                 type: "POST",
                 url: " /delete",
-                data: { "data": item },
+                data: { "data": index},
                 success: function () {
                     li_tag = inp.parentElement.parentElement.parentElement;
                     ul_tag = li_tag.parentElement;
@@ -99,7 +101,7 @@
             });
         }
 
-        function modifyItem(th) {
+        function modifyItem(th, index) {
             inp = th;
             item = inp.parentElement.parentElement.children[0]['href'];
             location.href = item.replace("admin", "modify")
@@ -107,18 +109,21 @@
 
         var i = 1, j = 1;
 
-        var map_dict = { '上海国际能源交易中心': '上期能源', '上海期货交易所': '上期所', '郑州商品交易所': '郑商所', '大连商品交易所': '大商所', '中金所': '中金所', '芝加哥商业交易所': 'CME', '欧洲期货交易所': 'EUREX', '香港交易所': 'HKEX', '美国洲际交易所': 'ICE', '伦敦金属交易所': 'LME', '新加坡交易所': 'SGX', '东京商品交易所': 'TOCOM', '马来西亚交易所': 'MYX' }
-
         {% for c in context %}
-        if ('{{c}}' in map_dict) {
-            var map_c = map_dict['{{c}}']
-        } else {
-            map_c = '{{c}}'
-        }
-        html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
+        html.push('<a class="mui-control-item" href="#content' + i + '">{{c}}({{context[c] | length}})</a>');
         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
         {% for item in context[c] %}
-        subhtml.push('<li class="mui-table-view-cell" >' + '<div style="line-height:200%;"><a href="/admin?variety={{item}}&location={{c}}" target="_blank">{{item}}' + '</a><div style="float:right;"><input type="button" value="delete" onclick="deleteItem(this)" ></input><input type="button" value="modify" onclick="modifyItem(this)"></input></div></div>' + '</li>');
+        subhtml.push(
+            `<li class="mui-table-view-cell" >
+                <div style="line-height:200%;">
+                    <a href="/admin/{{item[0]}}" target="_blank">{{item[1]}}</a>
+                    <div style="float:right;">
+                        <input type="button" value="delete" onclick="deleteItem(this, {{item[0]}})" ></input>
+                        <input type="button" value="modify" onclick="modifyItem(this, {{item[0]}})"></input>
+                    </div>
+                </div>
+            </li>`
+        );
         {% endfor %}
         subhtml.push('</ul></div>');
         i++;
@@ -148,25 +153,29 @@
                             html = [];
                             subhtml = [];
                             var i = 1;
-                            jdat = JSON.parse(data);
-                            for (exchange in jdat) {
-                                console.log(exchange)
-                                if (exchange in map_dict) {
-                                    map_c = map_dict[exchange];
-                                } else {
-                                    map_c = exchange;
-                                }
-                                html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
+                            var response_data = JSON.parse(data);
+                            for (exchange in response_data) {
+                                html.push('<a class="mui-control-item" href="#content' + i + '">' + exchange + '</a>');
                                 subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
-                                for (product in jdat[exchange]) {
-                                    subhtml.push('<li class="mui-table-view-cell">' + '<div style="line-height:200%;"><a href="/admin?variety=' + jdat[exchange][product] + '&location=' + exchange + '" target="_blank">' + jdat[exchange][product] + '</a><div style="float:right;">' + '<input type="button" onclick="deleteItem(this)" value="delete"></input><input type="button" onclick = "modifyItem(this)" value="modify""></input></div></div></li>');
+                                for (item of response_data[exchange]) {
+                                    subhtml.push(
+                                        '<li class="mui-table-view-cell"><div style="line-height:200%;">\
+                                            <a href="/admin/' + item[0] + '" target="_blank">' + item[1] + '</a>\
+                                            <div style="float:right;">\
+                                                <input type="button" onclick="deleteItem(this, ' + item[0] +' )" value="delete"></input>\
+                                                <input type="button" onclick = "modifyItem(this, ' + item[0] + ')" value="modify""></input>\
+                                            </div>\
+                                        </li>'
+                                    );
                                 }
 
                                 subhtml.push('</ul></div>');
                                 i++;
 
                             }
+                            //填充左控制栏
                             fillContents(controls, html);
+                            //填充由内容栏
                             fillContents(contents, subhtml);
 
                             //默认选中第一个

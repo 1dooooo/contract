@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <script type="text/javascript" src="static/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/js/mui.min.js"></script>
 
     <!--标准mui.css-->
     <link rel="stylesheet" href="/static/css/mui.min.css">
@@ -40,7 +41,8 @@
     <header class="mui-bar mui-bar-nav">
         <div>
             <form id="searchForm" onsubmit="return false;" style="float: right;">
-                <input type="text" id="searchInput" placeholder="please enter here" name="keyword" autofocus="autofocus" onkeypress="if(event.keyCode==13) {searchBtn.click();return false;}"  style="width: 70%">
+                <input type="text" id="searchInput" placeholder="please enter here" name="keyword" autofocus="autofocus" onkeypress="if(event.keyCode==13) {searchBtn.click();return false;}"
+                    style="width: 70%">
                 <input type="button" id="searchBtn" style="width: 25%;vertical-align:middle;" onclick="search()" value="Search"></input>
             </form>
         </div>
@@ -55,7 +57,6 @@
 
         </div>
     </div>
-    <script src="/static/js/mui.min.js"></script>
     <script>
         mui.init({
             swipeBack: false //启用右滑关闭功能
@@ -74,18 +75,11 @@
 
         var i = 1, j = 1;
 
-        var map_dict = { '上海国际能源交易中心': '上期能源', '上海期货交易所': '上期所', '郑州商品交易所': '郑商所', '大连商品交易所': '大商所', '中金所': '中金所', '芝加哥商业交易所': 'CME', '欧洲期货交易所': 'EUREX', '香港交易所': 'HKEX', '美国洲际交易所': 'ICE', '伦敦金属交易所': 'LME', '新加坡交易所': 'SGX', '东京商品交易所': 'TOCOM', '马来西亚交易所': 'MYX' }
-
         {% for c in context %}
-        if ('{{c}}' in map_dict) {
-            var map_c = map_dict['{{c}}']
-        } else {
-            map_c = '{{c}}'
-        }
-        html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
+        html.push('<a class="mui-control-item" href="#content' + i + '">{{c}}</a>');
         subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
         {% for item in context[c] %}
-        subhtml.push('<li class="mui-table-view-cell" style="display:none;">' + '<a href="/show?variety={{item}}&location={{c}}" target="_blank">' + '{{item}}' + '</a>');
+        subhtml.push('<li class="mui-table-view-cell" style="display:none;"><a href="/show/{{item[0]}}" target="_blank">{{item[1]}}</a>');
         {% endfor %}
         subhtml.push('</ul></div>');
         i++;
@@ -93,9 +87,9 @@
         fillContents(controls, html);
         fillContents(contents, subhtml);
 
-        
-        $("li:even").fadeIn(1500); 
-        $("li:odd").fadeIn(1000);   
+
+        $("li:even").fadeIn(1500);
+        $("li:odd").fadeIn(1000);
 
 
         //默认选中第一个
@@ -118,18 +112,16 @@
                             html = [];
                             subhtml = [];
                             var i = 1;
-                            jdat = JSON.parse(data);
-                            for (exchange in jdat) {
-                                console.log(exchange)
-                                if (exchange in map_dict) {
-                                    map_c = map_dict[exchange];
-                                } else {
-                                    map_c = exchange;
-                                }
-                                html.push('<a class="mui-control-item" href="#content' + i + '">' + map_c + '</a>');
-                                subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
-                                for (product in jdat[exchange]) {
-                                    subhtml.push('<li class="mui-table-view-cell">' + '<a href="/admin?variety=' + jdat[exchange][product] + '&location=' + exchange + '" target="_blank">' + jdat[exchange][product] + '</a></li>');
+                            var response_data = JSON.parse(data);
+                            for (exchange in response_data) {
+                                html.push('<a class="mui-control-item" href="#content' + i + '">' + exchange + '</a>');
+                                subhtml.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">'); 
+                                for (item of response_data[exchange]) {
+                                    console.log(item)
+                                    subhtml.push(
+                                        '<li class="mui-table-view-cell">\
+                                            <a href="/admin/' + item['id'] + '" target="_blank">' + item['product'] +
+                                        '</a></li>');
                                 }
 
                                 subhtml.push('</ul></div>');
@@ -151,8 +143,8 @@
                 });
             }
         }
-        
-        
+
+
     </script>
 
 </body>

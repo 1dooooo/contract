@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<script type="text/javascript" src="static/js/jquery-3.1.1.min.js" ></script>
+		<script type="text/javascript" src="/static/js/jquery-3.1.1.min.js" ></script>
 		<script type="text/javascript">
 			function setActiveStyleSheet(title) {
 				var i, a;
@@ -50,9 +50,9 @@
 	<body>
 		<div class="style_changer" style="margin-left:50px;">
 				<div class="style_changer_text" style="float: left;">Themes:
-				<input type="submit" value="1" onclick="setActiveStyleSheet('style1');" style="width:60px;height:25px;border:none;background:url(static/images/bg.gif) left top;"/>
-				<input type="submit" value="2" onclick="setActiveStyleSheet('style2');" style="width:60px;height:25px;border:none;background:url(static/images/center_bg2.gif) left top;"/>
-				<input type="submit" value="3" onclick="setActiveStyleSheet('style3');" style="width:60px;height:25px;border:none;background:url(static/images/center_bg3.gif) left top;" />
+				<input type="submit" value="1" onclick="setActiveStyleSheet('style1');" style="width:60px;height:25px;border:none;background:url(/static/images/bg.gif) left top;"/>
+				<input type="submit" value="2" onclick="setActiveStyleSheet('style2');" style="width:60px;height:25px;border:none;background:url(/static/images/center_bg2.gif) left top;"/>
+				<input type="submit" value="3" onclick="setActiveStyleSheet('style3');" style="width:60px;height:25px;border:none;background:url(/static/images/center_bg3.gif) left top;" />
 				</div>
 				
 		</div>
@@ -68,189 +68,30 @@
 					return true;
 				}
 			</script>
-			<form id="update" onsubmit="return checkInput()">
-				<fieldset>
-					<legend>基本信息</legend>
-					<div class="form-row">
-						<div class="field-label"><label for="exchange">交易所</label>:</div>
-						<div class="field-widget"><input name="exchange" id="exchange" class="required" title="请输入 交易所">(必填)</input></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="product">品种</label>:</div>
-						<div class="field-widget"><input name="product" id="product" class="required" title="请输入 品种">(必填)</input></div>
-					</div>
+		<form id="update" onsubmit="return checkInput()">
+			<fieldset>
+				<legend>基本信息</legend>
+				{% for item in map_dict %}
+				{% if item != 'id' %}
+				<div class="form-row">
+					<div class="field-label"><label for="{{item}}">{{map_dict[item]}}</label>:</div>
+					<div class="field-widget"><input class="required" name="{{item}}" id="{{item}}" title="请输入 {{item}}"></input></div>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</fieldset>
 
-					
-					<div class="form-row">
-						<div class="field-label"><label for="code">代码</label>:</div>
-						<div class="field-widget"><input name="code" id="code" class="required" title="请输入 代码" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="unit">合约单位</label>:</div>
-						<div class="field-widget"><input name="unit" id="unit" class="required" title="请输入 合约单位" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="tick">最小跳动</label>:</div>
-						<div class="field-widget"><input name="tick" id="tick" class="required" title="请输入 最小跳动" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="last_trading_date">最后交易日</label>:</div>
-						<div class="field-widget"><input name="last_trading_date" id="last_trading_date" class="required" title="请输入 最后交易日" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="tradingTime">白盘交易时间</label>:</div>
-						<div class="field-widget"><input name="tradingTime" id="tradingTime" class="required" title="请输入 白盘交易时间" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="night_tradingtime">夜盘交易时间</label>:</div>
-						<div class="field-widget"><input name="night_tradingtime" id="night_tradingtime" class="required" title="请输入 夜盘交易时间" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="ltd_tradingtime">最后交易日特殊交易时间</label>:</div>
-						<div class="field-widget"><input name="ltd_tradingtime" id="ltd_tradingtime" class="required" title="请输入 最后交易日特殊交易时间" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="max_handnum">单笔最大下单(手)</label>:</div>
-						<div class="field-widget"><input name="max_handnum" id="max_handnum" class="required" title="请输入 单笔最大下单(手)" /></div>
-					</div>
-					
-				</fieldset>
-				
-				<fieldset>
-					<legend>手续费与保证金</legend>
-					<div class="form-row">
-						<div class="field-label"><label for="exch_fee">手续费</label>:</div>
-						<div class="field-widget"><input name="exch_fee" id="exch_fee" class="required" title="请输入 手续费" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="margin">正常保证金</label>:</div>
-						<div class="field-widget"><input name="margin" id="margin" class="required" title="请输入 正常保证金" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="dmargin_adjust_date">临近交割月交易所首次保证金调整(%):</label></div>
-						<div class="field-widget"><textarea name="dmargin_adjust_date" id="dmargin_adjust_date" class="required"></textarea></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="delivery_month_margin">交割月保证金</label>:</div>
-						<div class="field-widget"><input name="delivery_month_margin" id="delivery_month_margin" class="required" title="请输入 交割月保证金" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="position_margin">持仓量变化 保证金</label>:</div>
-						<div class="field-widget"><input name="position_margin" id="position_margin" class="required" title="请输入 持仓量变化 保证金" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="raising_limit_margin1">第一板结算起 保证金</label>:</div>
-						<div class="field-widget"><input name="raising_limit_margin1" id="raising_limit_margin1" class="required" title="请输入 第一板结算起 保证金" /></div>
-					</div>
-					
-					<div class="form-row">
-							<div class="field-label"><label for="raising_limit_margin2">第二板结算起 保证金</label>:</div>
-							<div class="field-widget"><input name="raising_limit_margin2" id="raising_limit_margin2" class="required" title="请输入 第二板结算起 保证金" /></div>
-					</div>
-				</fieldset>
-				
-				<fieldset>
-					<legend class="optional">涨跌幅、限仓与交割</legend>
-					<div class="form-row">
-						<div class="field-label"><label for="raising_limit">正常涨跌幅</label>:</div>
-						<div class="field-widget"><input name="raising_limit" id="raising_limit" class="required" title="请输入 正常涨跌幅" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="raising_limit_1">第一板结算起 涨跌幅</label>:</div>
-						<div class="field-widget"><input name="raising_limit_1" id="raising_limit_1" class="required" title="请输入 第一板结算起 涨跌幅" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="raising_limit_2">第二板结算起 涨跌幅</label>:</div>
-						<div class="field-widget"><input name="raising_limit_2" id="raising_limit_2" class="required" title="请输入 第二板结算起 涨跌幅" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="position_limit">一般月份单边限仓</label>:</div>
-						<div class="field-widget"><input name="position_limit" id="position_limit" class="required" title="请输入 一般月份单边限仓" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="dMonth_position_limit">交割前月限仓</label>:</div>
-						<div class="field-widget"><input name="dMonth_position_limit" id="dMonth_position_limit" class="required" title="请输入 交割前月限仓" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="Pre_dmonth_position_limit">交割月限仓</label>:</div>
-						<div class="field-widget"><input name="Pre_dmonth_position_limit" id="Pre_dmonth_position_limit" class="required" title="请输入 手续费" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="delivery_method">交割方式</label>:</div>
-						<div class="field-widget"><input name="delivery_method" id="delivery_method" class="required" title="请输入 交割方式" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="exch_delivery_fee">交割费用</label>:</div>
-						<div class="field-widget"><input name="exch_delivery_fee" id="exch_delivery_fee" class="required" title="请输入 交割费用" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="delivery_unit">交割单位</label>:</div>
-						<div class="field-widget"><input name="delivery_unit" id="delivery_unit" class="required" title="请输入 交割单位" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="delivery_settlemnt_price">交割结算价</label>:</div>
-						<div class="field-widget"><input name="delivery_settlemnt_price" id="delivery_settlemnt_price" class="required" title="请输入 交割结算价" /></div>
-					</div>
-					
-					<div class="form-row">
-						<div class="field-label"><label for="first_notice_day">交割日期</label>:</div>
-						<div class="field-widget"><textarea name="first_notice_day" id="first_notice_day" class="required"></textarea></div>
-					</div>
-					<div class="form-row">
-							<div class="field-label"><label for="currency">结算货币</label>:</div>
-							<div class="field-widget"><input name="currency" id="currency" class="required" title="请输入 结算货币"></input></div>
-					</div>
-					<div class="form-row">
-							<div class="field-label"><label for="contract_month">合约月份</label>:</div>
-							<div class="field-widget"><input name="contract_month" id="contract_month" class="required" title="请输入 合约月份"></input></div>
-					</div>
-					<div class="form-row">
-							<div class="field-label"><label for="offer">报价</label>:</div>
-							<div class="field-widget"><input name="offer" id="offer" class="required" title="请输入 报价"></input></div>
-					</div>
-					<div class="form-row">
-							<div class="field-label"><label for="declaration_level">申报水平</label>:</div>
-							<div class="field-widget"><input name="declaration_level" id="declaration_level" class="required" title="请输入 申报水平"></input></div>
-					</div>
-					<div class="form-row">
-							<div class="field-label"><label for="last_delivery_date">首次通知日</label>:</div>
-							<div class="field-widget"><input name="last_delivery_date" id="last_delivery_date" class="required" title="请输入 首次通知日"></input></div>
-					</div>
-				</fieldset> 
-
-				<input type="button" class="button" value="Submit" onclick="update()" />
-				<input class="button" type="button" value="Reset" onclick="reset(); return false" />
-			</form>
+			<input type="button" class="button" value="Submit" onclick="addItem()" />
+			<input class="reset" type="button" value="Reset" onclick="reset(); return false" />
+		</form>
 		</div>
 		<script>
 			function setValue(){
-				{% if context %}
 				{% for c in context %}
-				document.getElementById('{{c}}').value = '{{context[c]}}'
-				{% endfor %}
+				{% if c != 'id' %}
+					document.getElementById('{{c}}').value = '{{context[c]}}';
 				{% endif %}
+				{% endfor %}
 			}
 			setValue();
 		</script>
