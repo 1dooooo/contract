@@ -1,9 +1,8 @@
 from sqlalchemy import Column, Text, Integer
 from sqlalchemy.ext.declarative import declarative_base
-import json
+import json,os
 
-
-with open('/var/www/contract/map_dict.json', 'r', encoding = 'utf-8') as f:
+with open(os.path.dirname(os.path.realpath(__file__))+'//map_dict.json', 'r', encoding = 'utf-8') as f:
     map_dict = json.loads(f.read())
 
 # create Base Object
@@ -12,6 +11,7 @@ def to_dict(self):
     """字典的形式返回某个数据库对象
     由于数据库以英文字段存储，此方法将其映射为中文，若不需要映射成中文，用如下的 to_raw_dict 方法
     """
+
     tmp_dict = {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
     return {map_dict[key]:tmp_dict[key] for key in tmp_dict}
 

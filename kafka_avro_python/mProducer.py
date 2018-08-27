@@ -88,13 +88,13 @@ class Producer:
  
 def main():
     p = Producer(KafkaServer="192.168.23.179", KafkaPort="9092", Topic='one')
-    for i in range(5):
-        #time.sleep(1)
-        result = DBSession().query(FutureContract).all()
-        for item in result:
-            p.sendMsg(item.to_raw_dict())
-        writer.close()
-        
+    #time.sleep(1)
+    result = DBSession().query(FutureContract).all()
+    s=DBSession().query(FutureContract.id, FutureContract.exchange, FutureContract.product).all()
+    for item in result:
+        p.sendMsg(item.to_raw_dict())
+    writer.close()
+    
         
  
  

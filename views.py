@@ -32,11 +32,11 @@ def upload():
             #将文件的内容读入 'data' 中， 'data' 为 python dict 类型
             #若为csv文件，先临时保存，后读取，删除
             if post_fix == 'csv':
-                f.save('/tmp/' + f.filename)
-                with open('/tmp/' + f.filename, 'r', encoding = 'utf-8') as file:
+                f.save(os.path.dirname(os.path.realpath(__file__))+"/" + f.filename)
+                with open(os.path.dirname(os.path.realpath(__file__))+"/" + f.filename, 'r', encoding = 'utf-8') as file:
                     data = csv.DictReader(file)
                     data = [dict(d) for d in data]
-                os.remove('/tmp/'+f.filename)
+                os.remove(os.path.dirname(os.path.realpath(__file__))+"/"+f.filename)
 
             #若为 json 类型，直接加载到 'data' 中
             if post_fix == 'json':
