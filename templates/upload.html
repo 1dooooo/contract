@@ -157,7 +157,13 @@
 					for (child of childs){
 						document.querySelector('.list-drag').removeChild(child);
 					}
-					alert("success !");					
+					if (xhr.readyState === XMLHttpRequest.DONE) {
+						if (xhr.status === 200) {
+							alert("success !");
+						} else {
+							alert("an error occured");
+						}
+					}
 				}
 
 				function appendFile(files, listName) {
