@@ -1,0 +1,28 @@
+{"namespace": "jixing.avro",
+ "type": "record",
+ "name": "Contract",
+ "fields": [
+    {"name": "id", "type": "int"},
+    {"name": "product", "type": ["string", "null"]},
+    {"name": "unit", "type": ["string", "null"]},
+    {"name": "offer_unit", "type": ["string", "null"]},
+    {"name": "tick", "type": ["string", "null"]},
+    {"name": "raising_limit", "type": ["string", "null"]},
+    {"name": "contract_month", "type": ["string", "null"]},
+    {"name": "trading_time", "type": ["string", "null"]},
+    {"name": "last_trading_date", "type": ["string", "null"]},
+    {"name": "last_delivery_date", "type": ["string", "null"]},
+    {"name": "delivery_grade", "type": ["string", "null"]},
+    {"name": "delivery_site", "type": ["string", "null"]},
+    {"name": "trading_margin", "type": ["string", "null"]},
+    {"name": "delivery_method", "type": ["string", "null"]},
+    {"name": "code", "type": ["string", "null"]},
+    {"name": "exchange", "type": ["string", "null"]},
+    {"name": "delivery_unit", "type": ["string", "null"]},
+    {"name": "trading_fee", "type": ["string", "null"]},
+    {"name": "multiplier", "type": ["string", "null"]},
+    {"name": "national_debt", "type": ["string", "null"]},
+    {"name": "offer_method", "type": ["string", "null"]},
+    {"name": "settlement_currency", "type": ["string", "null"]}
+]
+}
