@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request
 from urllib import parse
 
-import collections, json, csv, os
+import sql2web_consumer,sql2web_producer,web2sql_consumer,web2sql_producer
+import collections, json, csv, os, re
 
 from FutureContract import FutureContract, map_dict
 from db_about import DBSession
@@ -41,14 +42,18 @@ def upload():
             #若为 json 类型，直接加载到 'data' 中
             if post_fix == 'json':
                 data = json.load(f)
-            #构建一个数据库 session
-            session = DBSession()
-            #从 'data' 构建 FutureContract 对象，并加入数据库
-            for d in data:
-                fc = FutureContract(**d)
-                session.add(fc)
-            session.commit()
-            session.close()
+
+            web2sql_produce(list_items=data)
+
+
+            # #构建一个数据库 session
+            # session = DBSession()
+            # #从 'data' 构建 FutureContract 对象，并加入数据库
+            # for d in data:
+            #     fc = FutureContract(**d)
+            #     session.add(fc)
+            # session.commit()
+            # session.close()
 
     return render_template('upload.html')
 
@@ -61,15 +66,22 @@ def show(id = None):
     以 '/show' 请求时，渲染出出所有记录
     以 '/admin' 请求时，会在每条记录后额外渲染出 'modify'和'delete' 按钮
     """
+    list_items = sql2web_consume()
     #以查询字符串请求时，返回具体合约
     if id:
-        contracts = DBSession().query(FutureContract).filter(FutureContract.id == id).first().to_dict()
+        for item in list_items:
+            if item["id"] = id
+            contracts = item
+            break
+        #contracts = DBSession().query(FutureContract).filter(FutureContract.id == id).first().to_dict()
         return render_template('contract.html', contracts = contracts)
     #否则，返回所有记录
     context = collections.defaultdict(list)
-    fcs = DBSession().query(FutureContract.id, FutureContract.exchange, FutureContract.product).all()
-    for fc in fcs:
-        context[fc.exchange].append((fc.id, fc.product))
+    # fcs = DBSession().query(FutureContract.id, FutureContract.exchange, FutureContract.product).all()
+    # for fc in fcs:
+    #     context[fc.exchange].append((fc.id, fc.product))
+    for item in list_items:
+        context[item["exchange"]].append((item["id"],item["product"]))
     return render_template(request.path + '.html', context = context)
 
 
@@ -80,11 +92,12 @@ def add():
     以 POST 方式：添加记录到数据库
     """
     if request.method == 'POST':
-        fc = FutureContract(**{key: request.form[key] for key in request.form})
-        session = DBSession()
-        session.add(fc)
-        session.commit()
-        session.close()
+        web2sql_produce(list_items=[{key: request.form[key] for key in request.form}])
+        # fc = FutureContract(**{key: request.form[key] for key in request.form})
+        # session = DBSession()
+        # session.add(fc)
+        # session.commit()
+        # session.close()
     return render_template('add.html', map_dict = map_dict)
 
 @app.route('/search', methods=['POST'])

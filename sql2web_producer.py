@@ -7,14 +7,14 @@ from kafka.client import log
 import time
 import json
 
-from FutureContract import FutureContract
+from FutureContract import FutureContract,to_raw_dict
 from db_about import DBSession
 
 __metaclass__ = type
  
  
 class Producer:
-    def __init__(self, KafkaServer='127.0.0.1', KafkaPort='9092', ClientId="Procucer01", Topic=None):
+    def __init__(self, KafkaServer='127.0.0.1', KafkaPort='9092', ClientId="sql", Topic='"Test"):
         """
         用于设置生产者配置信息，这些配置项可以从源码中找到，下面为必要参数。
         :param KafkaServer: kafka服务器IP
@@ -55,13 +55,13 @@ class Producer:
  
     # 发送成功的回调函数
     def _on_send_success(self, record_metadata):
-        print("Topic: %s Partition: %d Offset: %s" % (record_metadata.topic, record_metadata.partition, record_metadata.offset))
+        #print("Topic: %s Partition: %d Offset: %s" % (record_metadata.topic, record_metadata.partition, record_metadata.offset))
  
     # 发送失败的回调函数
     def _on_send_error(self, excp):
         log.error('I am an errback', exc_info=excp)
  
-    def sendMsg(self, msg, partition=None):
+    def sendMsg(self,msg,partition=None):
         """
         发送消息
         :param msg: 消息
@@ -86,20 +86,12 @@ class Producer:
             print(err)
  
  
-def main():
-    p = Producer(KafkaServer="192.168.23.179", KafkaPort="9092", Topic='one')
-    #time.sleep(1)
-    result = DBSession().query(FutureContract).all()
-    
-    for item in result:
+def sql2web_produce():
+    p = Producer(KafkaServer="192.168.23.179", KafkaPort="9092", Topic='sql2web')
+    items = DBSession().query(FutureContract).all()
+    f = FutureContract(id=-1)
+    p.sendMsg(f.to_raw_dict())
+
+    for item in items:
         p.sendMsg(item.to_raw_dict())
-    writer.close()
-    
-        
- 
- 
-if __name__ == "__main__":
-    try:
-        main()
-    finally:
-        sys.exit()
+    return "success"
